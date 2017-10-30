@@ -7,7 +7,7 @@ use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
 
-final class RequestMatcher extends PHPUnit_Framework_Constraint
+final class RequestConstraint extends PHPUnit_Framework_Constraint
 {
     public function __construct($value)
     {
@@ -17,7 +17,7 @@ final class RequestMatcher extends PHPUnit_Framework_Constraint
         $this->wrapped = new PHPUnit_Framework_Constraint_IsEqual(str($this->value));
     }
 
-    public static function on(Request $expected)
+    public static function equalTo(Request $expected)
     {
         return new self($expected);
     }

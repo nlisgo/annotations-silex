@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Request;
 use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_TestCase;
 use TypeError;
-use tests\eLife\HypothesisClient\RequestMatcher;
+use tests\eLife\HypothesisClient\RequestConstraint;
 
 /**
  * @covers \eLife\HypothesisClient\ApiClient\UsersClient
@@ -59,7 +59,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
         $this->httpClient
             ->expects($this->once())
             ->method('send')
-            ->with(RequestMatcher::on($request))
+            ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
         $user = $this->usersClient->getUser([], 'user');
         $this->assertSame($response, $user);
