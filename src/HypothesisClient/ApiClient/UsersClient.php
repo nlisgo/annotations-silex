@@ -20,7 +20,7 @@ final class UsersClient
                 'path' => 'api/user/'.$user,
             ]),
             $headers,
-            Psr7\stream_for('{}')
+            '{}'
         );
     }
 }

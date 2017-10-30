@@ -60,7 +60,7 @@ trait ApiClientTrait
     final protected function patchRequest(
         UriInterface $uri,
         array $headers,
-        StreamInterface $content
+        string $content
     ) : PromiseInterface {
         $headers = array_merge($this->headers, $headers);
 
