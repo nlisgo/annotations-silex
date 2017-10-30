@@ -35,7 +35,8 @@ class HttpProblemTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_requires_a_request() {
+    public function it_requires_a_request()
+    {
         try {
             $this->getMockBuilder(HttpProblem::class)
                 ->setConstructorArgs(['foo'])

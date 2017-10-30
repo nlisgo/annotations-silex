@@ -3,11 +3,11 @@
 namespace tests\eLife\HypothesisClient\HttpClient;
 
 use eLife\HypothesisClient\ApiClient\AnnotationsClient;
+use eLife\HypothesisClient\Credentials\Credentials;
 use eLife\HypothesisClient\HttpClientInterface;
 use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\stream_for;
 use PHPUnit_Framework_TestCase;
 use TypeError;
 
@@ -50,6 +50,19 @@ final class AnnotationsClientTest extends PHPUnit_Framework_TestCase
         $request = new Request('GET', 'api/search?user=list&group=__world__&offset=0&limit=20&order=desc',
             ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient']);
         $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
+        $this->httpClient->method('send')->with($request)->willReturn($response);
+        $this->assertEquals($response, $this->annotationsClient->listAnnotations([], 'list', 1, 20, true, '__world__'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_lists_annotations_as_an_authorized_user()
+    {
+        $request = new Request('GET', 'api/search?user=list&group=__world__&offset=0&limit=20&order=desc',
+            ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key')]);
+        $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
+        $this->annotationsClient->setCredentials(new Credentials('client_id', 'secret_key'));
         $this->httpClient->method('send')->with($request)->willReturn($response);
         $this->assertEquals($response, $this->annotationsClient->listAnnotations([], 'list', 1, 20, true, '__world__'));
     }

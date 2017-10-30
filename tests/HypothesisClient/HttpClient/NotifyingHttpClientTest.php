@@ -2,8 +2,8 @@
 
 namespace tests\eLife\HypothesisClient\HttpClient;
 
+use eLife\HypothesisClient\HttpClient\NotifyingHttpClient;
 use eLife\HypothesisClient\HttpClientInterface;
-use eLife\HypothesisClient\HttpClient\NotifyingHttpClientInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase;
@@ -11,19 +11,20 @@ use RuntimeException;
 use function GuzzleHttp\Promise\promise_for;
 
 /**
- * @covers \eLife\HypothesisClient\HttpClient\NotifyingHttpClientInterface
+ * @covers \eLife\HypothesisClient\HttpClient\NotifyingHttpClient
  */
 final class NotifyingHttpClientTest extends PHPUnit_Framework_TestCase
 {
     private $originalClient;
     private $client;
 
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpOriginalClient()
     {
-        parent::setUp();
-
         $this->originalClient = $this->createMock(HttpClientInterface::class);
-        $this->client = new NotifyingHttpClientInterface($this->originalClient);
+        $this->client = new NotifyingHttpClient($this->originalClient);
     }
 
     /**

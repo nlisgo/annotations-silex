@@ -25,9 +25,11 @@ final class HttpResultTest extends PHPUnit_Framework_TestCase
     /** @var HttpResult */
     private $result;
 
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpResult()
     {
-        parent::setUp();
         $this->data = ['one' => ['two', 'three']];
         $this->response = new Response(200, [], json_encode($this->data));
         $this->result = HttpResult::fromResponse($this->response);

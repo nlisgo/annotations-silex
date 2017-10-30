@@ -34,7 +34,8 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_requires_a_request() {
+    public function it_requires_a_request()
+    {
         try {
             $this->getMockBuilder(BadResponse::class)
                 ->setConstructorArgs(['foo'])
@@ -52,7 +53,8 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_requires_a_response() {
+    public function it_requires_a_response()
+    {
         try {
             $this->getMockBuilder(BadResponse::class)
                 ->setConstructorArgs(['foo', $this->createMock(RequestInterface::class)])

@@ -7,7 +7,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use Throwable;
 
-final class NotifyingHttpClientInterface implements HttpClientInterface
+final class NotifyingHttpClient implements HttpClientInterface
 {
     private $httpClient;
     private $listeners = [];

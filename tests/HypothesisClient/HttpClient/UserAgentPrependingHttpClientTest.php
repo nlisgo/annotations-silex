@@ -2,16 +2,16 @@
 
 namespace tests\eLife\HypothesisClient\HttpClient;
 
+use eLife\HypothesisClient\HttpClient\NotifyingHttpClient;
+use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClient;
 use eLife\HypothesisClient\HttpClientInterface;
-use eLife\HypothesisClient\HttpClient\NotifyingHttpClientInterface;
-use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClientInterface;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;
 use Traversable;
 
 /**
- * @covers \eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClientInterface
+ * @covers \eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClient
  */
 final class UserAgentPrependingHttpClientTest extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ final class UserAgentPrependingHttpClientTest extends PHPUnit_Framework_TestCase
     {
         $this->requests = [];
 
-        $this->originalClient = new NotifyingHttpClientInterface($this->createMock(HttpClientInterface::class));
+        $this->originalClient = new NotifyingHttpClient($this->createMock(HttpClientInterface::class));
 
         $this->originalClient->addRequestListener(function (RequestInterface $request) {
             $this->requests[] = $request;
@@ -40,7 +40,7 @@ final class UserAgentPrependingHttpClientTest extends PHPUnit_Framework_TestCase
     {
         $request = new Request('GET', 'foo', ['User-Agent' => $existing]);
 
-        $client = new UserAgentPrependingHttpClientInterface($this->originalClient, $input);
+        $client = new UserAgentPrependingHttpClient($this->originalClient, $input);
 
         $client->send($request)->wait();
 

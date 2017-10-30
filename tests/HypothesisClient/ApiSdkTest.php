@@ -4,8 +4,8 @@ namespace tests\eLife\HypothesisClient;
 
 use eLife\HypothesisClient\ApiClient\AnnotationsClient;
 use eLife\HypothesisClient\ApiClient\UsersClient;
-use eLife\HypothesisClient\HttpClientInterface;
 use eLife\HypothesisClient\ApiSdk;
+use eLife\HypothesisClient\HttpClientInterface;
 use PHPUnit_Framework_TestCase;
 
 /**

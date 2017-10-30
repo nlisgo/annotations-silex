@@ -19,9 +19,11 @@ final class ArrayResultTest extends PHPUnit_Framework_TestCase
     /** @var ArrayResult */
     private $result;
 
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpResult()
     {
-        parent::setUp();
         $this->data = ['foo' => ['bar', 'baz']];
         $this->result = new ArrayResult($this->data);
     }

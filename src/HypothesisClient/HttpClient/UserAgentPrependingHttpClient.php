@@ -6,7 +6,7 @@ use eLife\HypothesisClient\HttpClientInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 
-final class UserAgentPrependingHttpClientInterface implements HttpClientInterface
+final class UserAgentPrependingHttpClient implements HttpClientInterface
 {
     private $httpClient;
     private $userAgent;
