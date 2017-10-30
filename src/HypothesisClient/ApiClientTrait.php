@@ -2,7 +2,8 @@
 
 namespace eLife\HypothesisClient;
 
-use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClientInterface;
+use eLife\HypothesisClient\Credentials\CredentialsInterface;
+use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClient;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\StreamInterface;
@@ -15,8 +16,13 @@ trait ApiClientTrait
 
     public function __construct(HttpClientInterface $httpClient, array $headers = [])
     {
-        $this->httpClient = new UserAgentPrependingHttpClientInterface($httpClient, 'HypothesisClient');
+        $this->httpClient = new UserAgentPrependingHttpClient($httpClient, 'HypothesisClient');
         $this->headers = $headers;
+    }
+
+    final public function setCredentials(CredentialsInterface $credentials)
+    {
+        $this->headers['Authorization'] = 'Basic '.base64_encode($credentials->getClientId().':'.$credentials->getSecretKey());
     }
 
     final protected function deleteRequest(UriInterface $uri, array $headers) : PromiseInterface
