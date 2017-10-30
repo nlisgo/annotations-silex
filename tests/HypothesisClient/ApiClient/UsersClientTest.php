@@ -8,8 +8,10 @@ use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
+use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_TestCase;
 use TypeError;
+use tests\eLife\HypothesisClient\RequestMatcher;
 
 /**
  * @covers \eLife\HypothesisClient\ApiClient\UsersClient
@@ -47,11 +49,26 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
      */
     public function it_gets_a_user()
     {
-        $request = new Request('PATCH', 'api/user/user',
-            ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient'], Psr7\stream_for('{}'));
+        $request = new Request(
+            'PATCH',
+            'api/user/user',
+            ['X-Foo' => 'another_bar', 'User-Agent' => 'HypothesisClient'], 
+            '{}'
+        );
         $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
-        $this->httpClient->expects($this->once())->method('send')->with($request)->willReturn($response);
+        $this->httpClient
+            ->expects($this->once())
+            ->method('send')
+            ->with(RequestMatcher::on($request))
+            ->willReturn($response);
         $user = $this->usersClient->getUser([], 'user');
         $this->assertSame($response, $user);
+    }
+
+    private function request(Request $expected)
+    {
+        return $this->callback(function($actual) use ($expected) {
+            return str($expected) == str($actual);
+        });
     }
 }
