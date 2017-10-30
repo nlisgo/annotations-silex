@@ -1,0 +1,5 @@
+/build/
+/config/local.php
+/var/
+/vendor/
+!.gitkeep

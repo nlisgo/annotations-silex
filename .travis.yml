@@ -1,0 +1,27 @@
+# Project language
+language: php
+
+php:
+  - 7.1
+
+# Allows use container-based infrastructure
+sudo: false
+
+# Cache composer packages so "composer install" is faster
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+# Update composer
+before-install:
+  - composer self-update
+
+# Install composer dependencies
+install:
+  - composer install
+
+# Run script
+script:
+  - ./vendor/bin/proofreader src/ web/
+  - ./vendor/bin/proofreader --no-phpcpd tests/
+  - ./vendor/bin/phpunit
