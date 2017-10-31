@@ -10,18 +10,25 @@ namespace eLife\HypothesisClient\Credentials;
 interface CredentialsInterface
 {
     /**
-     * Returns the AWS access key ID for this credentials object.
+     * Returns the access client ID for this credentials object.
      *
      * @return string
      */
     public function getClientId() : string;
 
     /**
-     * Returns the AWS secret access key for this credentials object.
+     * Returns the secret access key for this credentials object.
      *
      * @return string
      */
     public function getSecretKey() : string;
+
+    /**
+     * Returns the authority for this credentials object.
+     *
+     * @return string|null
+     */
+    public function getAuthority();
 
     /**
      * Converts the credentials to an associative array.

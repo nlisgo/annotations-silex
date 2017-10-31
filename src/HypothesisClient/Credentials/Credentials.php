@@ -8,11 +8,13 @@ class Credentials implements CredentialsInterface, Serializable
 {
     private $clientId;
     private $secret;
+    private $authority;
 
-    public function __construct(string $clientId, string $secret)
+    public function __construct(string $clientId, string $secret, string $authority = null)
     {
         $this->clientId = trim($clientId);
         $this->secret = trim($secret);
+        $this->authority = (is_string($authority)) ? trim($authority) : $authority;
     }
 
     public function getClientId() : string
@@ -25,11 +27,17 @@ class Credentials implements CredentialsInterface, Serializable
         return $this->secret;
     }
 
+    public function getAuthority()
+    {
+        return $this->authority;
+    }
+
     public function toArray() : array
     {
         return [
-            'clientId' => $this->clientId,
-            'secret' => $this->secret,
+            'clientId' => $this->getClientId(),
+            'secret' => $this->getSecretKey(),
+            'authority' => $this->getAuthority(),
         ];
     }
 
@@ -44,10 +52,6 @@ class Credentials implements CredentialsInterface, Serializable
 
         $this->clientId = $data['clientId'];
         $this->secret = $data['secret'];
-    }
-
-    public function foo() : string
-    {
-        return 'bar';
+        $this->authority = $data['authority'];
     }
 }

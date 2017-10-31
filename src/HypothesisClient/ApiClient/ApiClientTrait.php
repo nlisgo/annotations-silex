@@ -13,6 +13,7 @@ trait ApiClientTrait
 {
     private $httpClient;
     private $headers;
+    private $credentials;
 
     public function __construct(HttpClientInterface $httpClient, array $headers = [])
     {
@@ -22,7 +23,13 @@ trait ApiClientTrait
 
     final public function setCredentials(CredentialsInterface $credentials)
     {
+        $this->credentials = $credentials;
         $this->headers['Authorization'] = 'Basic '.base64_encode($credentials->getClientId().':'.$credentials->getSecretKey());
+    }
+
+    final public function getCredentials() : CredentialsInterface
+    {
+        return $this->credentials;
     }
 
     final protected function deleteRequest(UriInterface $uri, array $headers) : PromiseInterface

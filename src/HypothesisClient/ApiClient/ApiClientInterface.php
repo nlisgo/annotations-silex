@@ -10,4 +10,6 @@ interface ApiClientInterface
     public function __construct(HttpClientInterface $httpClient, array $headers = []);
 
     public function setCredentials(CredentialsInterface $credentials);
+
+    public function getCredentials() : CredentialsInterface;
 }
