@@ -59,15 +59,13 @@ final class ApiSdkTest extends PHPUnit_Framework_TestCase
             ->setConstructorArgs(['client_id', 'secret_key'])
             ->getMock();
 
-        $credentials->expects($this->exactly(2))->method('getClientId')->willReturn('client_id');
-        $credentials->expects($this->exactly(2))->method('getSecretKey')->willReturn('client_id');
+        $credentials->expects($this->atLeastOnce())->method('getClientId')->willReturn('client_id');
+        $credentials->expects($this->atLeastOnce())->method('getSecretKey')->willReturn('secret_key');
 
         $sdk = (new ApiSdk(
             $httpClient,
             $credentials
         ));
-
-        $usersClient = $sdk->createUsers();
 
         $request = new Request(
             'PATCH',
@@ -81,6 +79,6 @@ final class ApiSdkTest extends PHPUnit_Framework_TestCase
             ->method('send')
             ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
-        $this->assertEquals($response, $usersClient->getUser([], 'user'));
+        $this->assertEquals($response, $sdk->createUsers()->getUser([], 'user'));
     }
 }

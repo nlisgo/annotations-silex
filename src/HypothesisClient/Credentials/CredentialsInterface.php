@@ -14,19 +14,19 @@ interface CredentialsInterface
      *
      * @return string
      */
-    public function getClientId();
+    public function getClientId() : string;
 
     /**
      * Returns the AWS secret access key for this credentials object.
      *
      * @return string
      */
-    public function getSecretKey();
+    public function getSecretKey() : string;
 
     /**
      * Converts the credentials to an associative array.
      *
      * @return array
      */
-    public function toArray();
+    public function toArray() : array;
 }

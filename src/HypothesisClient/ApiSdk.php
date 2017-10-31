@@ -54,7 +54,7 @@ final class ApiSdk
         if (empty($this->usersClient)) {
             $this->usersClient = new UsersClient($this->httpClient);
             if (!empty($this->credentials)) {
-                $this->annotationsClient->setCredentials($this->credentials);
+                $this->usersClient->setCredentials($this->credentials);
             }
         }
 
