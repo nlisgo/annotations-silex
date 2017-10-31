@@ -3,10 +3,10 @@
 namespace tests\eLife\HypothesisClient;
 
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
 use PHPUnit_Framework_ExpectationFailedException;
+use function GuzzleHttp\Psr7\str;
 
 final class RequestConstraint extends PHPUnit_Framework_Constraint
 {
@@ -24,9 +24,9 @@ final class RequestConstraint extends PHPUnit_Framework_Constraint
     }
 
     /**
-     * @param Request  $other        Value or object to evaluate.
+     * @param Request $other Value or object to evaluate
      *
-     * @return boolean
+     * @return bool
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
