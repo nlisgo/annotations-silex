@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\HypothesisClient;
+namespace eLife\HypothesisClient\HttpClient;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;

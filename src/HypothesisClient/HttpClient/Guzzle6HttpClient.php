@@ -6,7 +6,6 @@ use eLife\HypothesisClient\Exception\ApiException;
 use eLife\HypothesisClient\Exception\ApiTimeout;
 use eLife\HypothesisClient\Exception\BadResponse;
 use eLife\HypothesisClient\Exception\NetworkProblem;
-use eLife\HypothesisClient\HttpClientInterface;
 use eLife\HypothesisClient\Result\HttpResult;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;

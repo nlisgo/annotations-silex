@@ -1,12 +1,12 @@
 <?php
 
-namespace eLife\HypothesisClient;
+namespace eLife\HypothesisClient\ApiClient;
 
 use eLife\HypothesisClient\Credentials\CredentialsInterface;
+use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClient;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 trait ApiClientTrait
@@ -42,7 +42,7 @@ trait ApiClientTrait
     final protected function postRequest(
         UriInterface $uri,
         array $headers,
-        StreamInterface $content
+        string $content
     ) : PromiseInterface {
         $headers = array_merge($this->headers, $headers);
 
@@ -54,7 +54,7 @@ trait ApiClientTrait
     final protected function putRequest(
         UriInterface $uri,
         array $headers,
-        StreamInterface $content
+        string $content
     ) : PromiseInterface {
         $headers = array_merge($this->headers, $headers);
 

@@ -3,12 +3,11 @@
 namespace tests\eLife\HypothesisClient\HttpClient;
 
 use eLife\HypothesisClient\ApiClient\UsersClient;
-use eLife\HypothesisClient\HttpClientInterface;
+use eLife\HypothesisClient\Credentials\Credentials;
+use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_TestCase;
 use TypeError;
 use tests\eLife\HypothesisClient\RequestConstraint;
@@ -22,10 +21,11 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
     /** @var UsersClient */
     private $usersClient;
 
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpClient()
     {
-        parent::setUp();
-
         $this->httpClient = $this->createMock(HttpClientInterface::class);
         $this->usersClient = new UsersClient($this->httpClient, ['X-Foo' => 'bar']);
     }
@@ -52,7 +52,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
         $request = new Request(
             'PATCH',
             'api/user/user',
-            ['X-Foo' => 'another_bar', 'User-Agent' => 'HypothesisClient'], 
+            ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient'],
             '{}'
         );
         $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
@@ -61,14 +61,27 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
             ->method('send')
             ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
-        $user = $this->usersClient->getUser([], 'user');
-        $this->assertSame($response, $user);
+        $this->assertSame($response, $this->usersClient->getUser([], 'user'));
     }
 
-    private function request(Request $expected)
+    /**
+     * @test
+     */
+    public function it_may_have_credentials()
     {
-        return $this->callback(function($actual) use ($expected) {
-            return str($expected) == str($actual);
-        });
+        $request = new Request(
+            'PATCH',
+            'api/user/user',
+            ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
+            '{}'
+        );
+        $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
+        $this->usersClient->setCredentials(new Credentials('client_id', 'secret_key'));
+        $this->httpClient
+            ->expects($this->once())
+            ->method('send')
+            ->with(RequestConstraint::equalTo($request))
+            ->willReturn($response);
+        $this->assertEquals($response, $this->usersClient->getUser([], 'user'));
     }
 }

@@ -6,6 +6,7 @@ use GuzzleHttp\Psr7\Request;
 use function GuzzleHttp\Psr7\str;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
+use PHPUnit_Framework_ExpectationFailedException;
 
 final class RequestConstraint extends PHPUnit_Framework_Constraint
 {

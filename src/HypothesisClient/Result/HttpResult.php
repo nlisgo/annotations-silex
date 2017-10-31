@@ -2,7 +2,6 @@
 
 namespace eLife\HypothesisClient\Result;
 
-use eLife\HypothesisClient\ResultInterface;
 use Iterator;
 use IteratorAggregate;
 use Psr\Http\Message\ResponseInterface;

@@ -2,9 +2,9 @@
 
 namespace tests\eLife\HypothesisClient\HttpClient;
 
+use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\HypothesisClient\HttpClient\NotifyingHttpClient;
 use eLife\HypothesisClient\HttpClient\UserAgentPrependingHttpClient;
-use eLife\HypothesisClient\HttpClientInterface;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;

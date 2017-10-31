@@ -4,7 +4,6 @@ namespace eLife\HypothesisClient\Result;
 
 use ArrayIterator;
 use BadMethodCallException;
-use eLife\HypothesisClient\ResultInterface;
 use Iterator;
 use IteratorAggregate;
 use function JmesPath\search;

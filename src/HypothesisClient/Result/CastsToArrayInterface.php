@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\HypothesisClient;
+namespace eLife\HypothesisClient\Result;
 
 use ArrayAccess;
 

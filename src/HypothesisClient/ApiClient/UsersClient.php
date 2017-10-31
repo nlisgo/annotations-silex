@@ -2,12 +2,10 @@
 
 namespace eLife\HypothesisClient\ApiClient;
 
-use eLife\HypothesisClient\ApiClientTrait;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Uri;
 
-final class UsersClient
+final class UsersClient implements ApiClientInterface
 {
     use ApiClientTrait;
 
