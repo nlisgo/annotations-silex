@@ -257,7 +257,9 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
     private function executeExceptionMessageRegExp($message = null, $glue = '.*\n.*')
     {
         if (!empty($message)) {
-            $messages = array_map(function($msg) { return preg_quote($msg, '/'); }, (array) $message);
+            $messages = array_map(function ($msg) {
+                return preg_quote($msg, '/');
+            }, (array) $message);
             $this->expectExceptionMessageRegExp('/'.implode($glue, $messages).'/');
         }
     }

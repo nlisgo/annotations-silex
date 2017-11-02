@@ -68,10 +68,12 @@ final class UsersClient implements ApiClientInterface
     }
 
     /**
-     * @param string $id
+     * @param string      $id
      * @param string|null $email
      * @param string|null $display_name
+     *
      * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     protected function validateUser(string $id, $email = null, $display_name = null)
