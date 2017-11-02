@@ -2,13 +2,13 @@
 
 namespace tests\eLife\HypothesisClient\Exception;
 
+use ArgumentCountError;
 use eLife\HypothesisClient\Exception\BadResponse;
 use eLife\HypothesisClient\Exception\HttpProblem;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use TypeError;
 
 /**
  * @covers \eLife\HypothesisClient\Exception\BadResponse
@@ -23,9 +23,9 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
         try {
             $this->getMockBuilder(BadResponse::class)->getMock();
             $this->fail('A message is required');
-        } catch (TypeError $error) {
+        } catch (ArgumentCountError $error) {
             $this->assertTrue(true, 'A message is required');
-            $this->assertContains('must be of the type string, none given', $error->getMessage());
+            $this->assertContains('Too few arguments', $error->getMessage());
         }
         $e = new BadResponse('foo', $this->createMock(RequestInterface::class), $this->createMock(ResponseInterface::class));
         $this->assertEquals('foo', $e->getMessage());
@@ -41,9 +41,9 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
                 ->setConstructorArgs(['foo'])
                 ->getMock();
             $this->fail('A request is required');
-        } catch (TypeError $error) {
+        } catch (ArgumentCountError $error) {
             $this->assertTrue(true, 'A request is required');
-            $this->assertContains('must implement interface '.RequestInterface::class.', none given', $error->getMessage());
+            $this->assertContains('Too few arguments', $error->getMessage());
         }
         $request = $this->createMock(RequestInterface::class);
         $e = new BadResponse('foo', $request, $this->createMock(ResponseInterface::class));
@@ -60,9 +60,9 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
                 ->setConstructorArgs(['foo', $this->createMock(RequestInterface::class)])
                 ->getMock();
             $this->fail('A response is required');
-        } catch (TypeError $error) {
+        } catch (ArgumentCountError $error) {
             $this->assertTrue(true, 'A response is required');
-            $this->assertContains('must implement interface '.ResponseInterface::class.', none given', $error->getMessage());
+            $this->assertContains('Too few arguments', $error->getMessage());
         }
         $response = $this->createMock(ResponseInterface::class);
         $e = new BadResponse('foo', $this->createMock(RequestInterface::class), $response);

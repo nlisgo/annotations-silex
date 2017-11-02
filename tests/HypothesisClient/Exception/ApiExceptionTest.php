@@ -2,11 +2,11 @@
 
 namespace tests\eLife\HypothesisClient\Exception;
 
+use ArgumentCountError;
 use eLife\HypothesisClient\Exception\ApiException;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
-use TypeError;
 
 /**
  * @covers \eLife\HypothesisClient\Exception\ApiException
@@ -21,9 +21,9 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
         try {
             $this->getMockBuilder(ApiException::class)->getMock();
             $this->fail('A message is required');
-        } catch (TypeError $error) {
+        } catch (ArgumentCountError $error) {
             $this->assertTrue(true, 'A message is required');
-            $this->assertContains('must be of the type string, none given', $error->getMessage());
+            $this->assertContains('Too few arguments', $error->getMessage());
         }
         $e = new ApiException('foo');
         $this->assertEquals('foo', $e->getMessage());
