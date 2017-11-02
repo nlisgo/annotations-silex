@@ -12,6 +12,7 @@
     },
     "require": {
         "php": ">=7.0",
+        "beberlei/assert": "^2.7",
         "guzzlehttp/guzzle": "^6.3",
         "silex/silex": "^2.2"
     },
