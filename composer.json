@@ -6,13 +6,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "spec\\eLife\\": "./spec",
             "tests\\eLife\\": "./tests"
         }
     },
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "beberlei/assert": "^2.7",
+        "elife/bus-sdk": "dev-master",
         "guzzlehttp/guzzle": "^6.3",
         "silex/silex": "^2.2"
     },
@@ -29,6 +29,8 @@
     "suggest": {
         "mtdowling/jmespath.php": "^2.4, to use the Result::search() method"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "sort-packages": true
     }
