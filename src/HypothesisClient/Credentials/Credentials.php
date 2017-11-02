@@ -10,7 +10,7 @@ class Credentials implements CredentialsInterface, Serializable
     private $secret;
     private $authority;
 
-    public function __construct(string $clientId, string $secret, string $authority = null)
+    public function __construct(string $clientId, string $secret, string $authority)
     {
         $this->clientId = trim($clientId);
         $this->secret = trim($secret);
@@ -27,7 +27,7 @@ class Credentials implements CredentialsInterface, Serializable
         return $this->secret;
     }
 
-    public function getAuthority()
+    public function getAuthority() : string
     {
         return $this->authority;
     }

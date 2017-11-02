@@ -53,7 +53,7 @@ trait ApiClientTrait
     ) : PromiseInterface {
         $headers = array_merge($this->headers, $headers);
 
-        $request = new Request('DELETE', $uri, $headers, $content);
+        $request = new Request('POST', $uri, $headers, $content);
 
         return $this->httpClient->send($request);
     }

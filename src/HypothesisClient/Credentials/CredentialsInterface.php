@@ -26,9 +26,9 @@ interface CredentialsInterface
     /**
      * Returns the authority for this credentials object.
      *
-     * @return string|null
+     * @return string
      */
-    public function getAuthority();
+    public function getAuthority() : string;
 
     /**
      * Converts the credentials to an associative array.
