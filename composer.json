@@ -13,6 +13,7 @@
         "php": ">=7.1",
         "beberlei/assert": "^2.7",
         "elife/bus-sdk": "dev-master",
+        "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "silex/silex": "^2.2"
     },
@@ -20,10 +21,12 @@
         "elife/proofreader-php": "dev-master",
         "mtdowling/jmespath.php": "^2.4",
         "phpunit/phpunit": "^5.7",
+        "silex/web-profiler": "^2.0",
         "symfony/browser-kit": "^3.3"
     },
     "scripts": {
-        "server": "php -S 0.0.0.0:8088 -t web web/app_dev.php",
+        "server": "php -S 0.0.0.0:8088 -t web web/app_local.php",
+        "server:dev": "php -S 0.0.0.0:8088 -t web web/app_dev.php",
         "server:prod": "php -S 0.0.0.0:8088 -t web web/app_prod.php"
     },
     "suggest": {
