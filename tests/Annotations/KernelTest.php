@@ -10,21 +10,21 @@ class KernelTest extends WebTestCase
 {
     public function createApplication() : HttpKernelInterface
     {
-        return Kernel::create();
+        return (new Kernel())->getApp();
     }
 
     /**
      * @test
      */
-    public function testPing()
+    public function it_returns_200_pong_when_the_application_is_correctly_setup()
     {
-        $client = $this->createClient();
-        $client->request('GET', '/ping');
-        $response = $client->getResponse();
+        $client = static::createClient();
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('pong', $response->getContent());
-        $this->assertEquals('text/plain; charset=UTF-8', $response->headers->get('Content-Type'));
-        $this->assertEquals('must-revalidate, no-cache, no-store, private', $response->headers->get('Cache-Control'));
+        $client->request('GET', '/ping');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertSame('text/plain; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
+        $this->assertSame('pong', $client->getResponse()->getContent());
+        $this->assertFalse($client->getResponse()->isCacheable());
     }
 }

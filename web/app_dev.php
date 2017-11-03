@@ -4,7 +4,12 @@ require_once __DIR__.'/bootstrap.php';
 
 use eLife\Annotations\Kernel;
 
-$app = Kernel::create();
-$app['debug'] = true;
+$config = include __DIR__.'/../config/dev.php';
 
-$app->run();
+$kernel = new Kernel($config);
+
+$kernel->withApp(function ($app) use ($config) {
+    $app['debug'] = $config['debug'] ?? false;
+});
+
+$kernel->run();

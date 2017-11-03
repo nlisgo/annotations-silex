@@ -2,4 +2,6 @@
 
 require_once __DIR__.'/bootstrap.php';
 
-eLife\Annotations\Kernel::create()->run();
+$config = include __DIR__.'/../config/prod.php';
+
+(new eLife\Annotations\Kernel($config))->run();
