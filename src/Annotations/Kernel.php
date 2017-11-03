@@ -2,16 +2,21 @@
 
 namespace eLife\Annotations;
 
+use Aws\Sqs\SqsClient;
 use Closure;
 use Doctrine\Common\Cache\FilesystemCache;
 use eLife\Annotations\Api\AnnotationsController;
+use eLife\Annotations\Provider\AnnotationsServiceProvider;
 use eLife\Bus\Limit\CompositeLimit;
 use eLife\Bus\Limit\LoggingMiddleware;
 use eLife\Bus\Limit\MemoryLimit;
 use eLife\Bus\Limit\SignalsLimit;
+use eLife\Bus\Queue\SqsMessageTransformer;
+use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
 use eLife\Ping\Silex\PingControllerProvider;
+use Knp\Provider\ConsoleServiceProvider;
 use Monolog\Logger;
 use Silex\Application;
 use Silex\Provider;
@@ -23,6 +28,7 @@ use Throwable;
 
 final class Kernel implements MinimalKernel
 {
+    const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
     const LOGS_DIR = __DIR__.'/../../var/logs';
 
@@ -59,7 +65,6 @@ final class Kernel implements MinimalKernel
 
     public function dependencies(Application $app)
     {
-
         // General cache.
         $app['cache'] = function () {
             return new FilesystemCache(self::CACHE_DIR);
@@ -105,9 +110,45 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['aws.sqs'] = function (Application $app) {
+            $config = [
+                'version' => '2012-11-05',
+                'region' => $app['config']['aws']['region'],
+            ];
+            if (isset($app['config']['aws']['endpoint'])) {
+                $config['endpoint'] = $app['config']['aws']['endpoint'];
+            }
+            if (!isset($app['config']['aws']['credential_file']) || $app['config']['aws']['credential_file'] === false) {
+                $config['credentials'] = [
+                    'key' => $app['config']['aws']['key'],
+                    'secret' => $app['config']['aws']['secret'],
+                ];
+            }
+
+            return new SqsClient($config);
+        };
+
+        $app['aws.queue'] = function (Application $app) {
+            return new SqsWatchableQueue($app['aws.sqs'], $app['config']['aws']['queue_name']);
+        };
+
+        $app['aws.queue_transformer'] = function (Application $app) {
+            return new SqsMessageTransformer($app['api.sdk']);
+        };
+
         $app['default_controller'] = function (Application $app) {
             return new AnnotationsController($app['logger'], $app['cache']);
         };
+
+        $app->register(new ConsoleServiceProvider(), [
+            'console.name' => 'Annotations console',
+            'console.version' => '0.1.0',
+            'console.project_directory' => self::ROOT,
+        ]);
+        $app->register(new AnnotationsServiceProvider(), [
+            'annotations.queue' => $app['aws.queue'],
+            'annotations.logger' => $app['logger'],
+        ]);
     }
 
     public function applicationFlow(Application $app) : Application

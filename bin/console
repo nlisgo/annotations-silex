@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+use eLife\Annotations\Kernel;
+use Symfony\Component\Console\Input\ArgvInput;
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+umask(002);
+set_time_limit(0);
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'local');
+if (!file_exists($configFile = __DIR__."/../config/$env.php")) {
+    echo 'Environment `'.$env.'` not found. Specify one with --env=$env', PHP_EOL;
+    exit(1);
+}
+$config = require $configFile;
+$app = new Kernel($config);
+if (!$app->get('console')) {
+    throw new LogicException('The console service does not exist. Did you forget to register Knp\Provider\ConsoleServiceProvider ?');
+}
+$console = $app->get('console');
+$console->run();
