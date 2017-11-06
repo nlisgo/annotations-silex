@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e1c5e73b624ff0119d0fb370022625e",
+    "content-hash": "377cd713bb773acf70f0f44a475907bf",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4693,6 +4693,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "elife/api-sdk": 20,
         "elife/bus-sdk": 20,
         "elife/proofreader-php": 20
     },

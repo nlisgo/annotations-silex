@@ -7,6 +7,10 @@ use Closure;
 use Doctrine\Common\Cache\FilesystemCache;
 use eLife\Annotations\Api\AnnotationsController;
 use eLife\Annotations\Provider\AnnotationsServiceProvider;
+use eLife\ApiClient\HttpClient\BatchingHttpClient;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiClient\HttpClient\NotifyingHttpClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\CompositeLimit;
 use eLife\Bus\Limit\LoggingMiddleware;
 use eLife\Bus\Limit\MemoryLimit;
@@ -16,6 +20,9 @@ use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
 use eLife\Ping\Silex\PingControllerProvider;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use Knp\Provider\ConsoleServiceProvider;
 use Monolog\Logger;
 use Silex\Application;
@@ -45,6 +52,8 @@ final class Kernel implements MinimalKernel
             'ttl' => 0,
             'file_logs_path' => self::LOGS_DIR,
             'logging_level' => Logger::INFO,
+            'api_url' => '',
+            'api_requests_batch' => 10,
         ], $config);
         $app->register(new PingControllerProvider());
         if ($app['config']['debug']) {
@@ -110,6 +119,45 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['guzzle'] = function (Application $app) {
+            // Create default HandlerStack
+            $stack = HandlerStack::create();
+            $logger = $app['logger'];
+            if ($app['config']['debug']) {
+                $stack->push(
+                    Middleware::mapRequest(function ($request) use ($logger) {
+                        $logger->debug("Request performed in Guzzle Middleware: {$request->getUri()}");
+
+                        return $request;
+                    })
+                );
+            }
+
+            return new Client([
+                'base_uri' => $app['config']['api_url'],
+                'handler' => $stack,
+            ]);
+        };
+
+        $app['api.sdk'] = function (Application $app) {
+            $notifyingHttpClient = new NotifyingHttpClient(
+                new BatchingHttpClient(
+                    new Guzzle6HttpClient(
+                        $app['guzzle']
+                    ),
+                    $app['config']['api_requests_batch']
+                )
+            );
+            if ($app['config']['debug']) {
+                $logger = $app['logger'];
+                $notifyingHttpClient->addRequestListener(function ($request) use ($logger) {
+                    $logger->debug("Request performed in NotifyingHttpClient: {$request->getUri()}");
+                });
+            }
+
+            return new ApiSdk($notifyingHttpClient);
+        };
+
         $app['aws.sqs'] = function (Application $app) {
             $config = [
                 'version' => '2012-11-05',
@@ -145,9 +193,17 @@ final class Kernel implements MinimalKernel
             'console.version' => '0.1.0',
             'console.project_directory' => self::ROOT,
         ]);
+
         $app->register(new AnnotationsServiceProvider(), [
-            'annotations.queue' => $app['aws.queue'],
+            'annotations.sqs' => $app['aws.sqs'],
+            'annotations.sqs.queue' => $app['aws.queue'],
+            'annotations.sqs.region' => $app['config']['aws']['region'],
+            'annotations.sqs.queue_name' => $app['config']['aws']['queue_name'],
+            'annotations.sqs.queue_message_type' => $app['config']['aws']['queue_message_default_type'],
             'annotations.logger' => $app['logger'],
+            'annotations.monitoring' => $app['monitoring'],
+            'annotations.api.sdk' => $app['api.sdk'],
+            'annotations.limit' => function (Application $app) { return $app['limit.interactive']; },
         ]);
     }
 

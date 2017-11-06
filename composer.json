@@ -12,6 +12,7 @@
     "require": {
         "php": ">=7.1",
         "beberlei/assert": "^2.7",
+        "elife/api-sdk": "^1.0@dev",
         "elife/bus-sdk": "dev-master",
         "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.3",

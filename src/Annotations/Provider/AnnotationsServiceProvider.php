@@ -2,9 +2,13 @@
 
 namespace eLife\Annotations\Provider;
 
+use eLife\Annotations\Command\QueueCreateCommand;
+use eLife\Annotations\Command\QueueImportCommand;
+use eLife\Annotations\Command\QueuePushCommand;
 use eLife\Bus\Command\QueueCleanCommand;
 use eLife\Bus\Command\QueueCountCommand;
 use Knp\Console\Application;
+use LogicException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -18,12 +22,21 @@ class AnnotationsServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         if (!isset($container['console'])) {
-            throw new \LogicException('You must register the ConsoleServiceProvider to use the '.self::class.'.');
+            throw new LogicException('You must register the ConsoleServiceProvider to use the '.self::class.'.');
         }
 
         $container->extend('console', function (Application $console) use ($container) {
-            $console->add(new QueueCleanCommand($container['annotations.queue'], $container['annotations.logger']));
-            $console->add(new QueueCountCommand($container['annotations.queue']));
+            $console->add(new QueueCleanCommand($container['annotations.sqs.queue'], $container['annotations.logger']));
+            $console->add(new QueueCountCommand($container['annotations.sqs.queue']));
+            $console->add(new QueuePushCommand($container['annotations.sqs.queue'], $container['annotations.logger'], $container['annotations.sqs.queue_message_type'] ?? null));
+            $console->add(new QueueCreateCommand($container['annotations.sqs'], $container['annotations.logger'], $container['annotations.sqs.queue_name'] ?? null, $container['annotations.sqs.region'] ?? null));
+            $console->add(new QueueImportCommand(
+                $container['annotations.api.sdk'],
+                $container['annotations.sqs.queue'],
+                $container['annotations.logger'],
+                $container['annotations.monitoring'],
+                $container['annotations.limit']
+            ));
 
             return $console;
         });
