@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "elife/proofreader-php": "dev-master",
+        "giorgiosironi/eris": "^0.9.0",
         "mtdowling/jmespath.php": "^2.4",
         "phpunit/phpunit": "^5.7",
         "silex/web-profiler": "^2.0",
