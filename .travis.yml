@@ -26,6 +26,7 @@ before-install:
 # Install composer dependencies
 install:
   - composer install
+  - aws --endpoint-url http://localhost:4100 sqs create-queue --queue-name annotations--travis
   - cp ./config/travis.php ./config/local.php
 
 # Run script
