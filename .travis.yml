@@ -4,8 +4,8 @@ language: php
 php:
   - 7.1
 
-# Allows use container-based infrastructure
-sudo: false
+# Required as we are using docker
+sudo: required
 
 services:
   - docker
@@ -18,7 +18,7 @@ cache:
 # Update composer
 before-install:
   - composer self-update
-  - pip install --user awscli
+  - sudo pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
   - docker pull pafortin/goaws
   - docker run -d --name goaws -p 4100:4100 pafortin/goaws
