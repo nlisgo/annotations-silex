@@ -26,6 +26,7 @@ before-install:
 # Install composer dependencies
 install:
   - composer install
+  - cp ./config/travis.php ./config/local.php
 
 # Run script
 script:
