@@ -4,6 +4,7 @@ namespace eLife\Annotations\Command;
 
 use eLife\ApiSdk\Model\Profile;
 use eLife\Bus\Command\QueueCommand;
+use eLife\Bus\Limit\Limit;
 use eLife\Bus\Queue\QueueItem;
 use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Bus\Queue\WatchableQueue;
@@ -25,7 +26,7 @@ final class QueueWatchCommand extends QueueCommand
         ApiSdk $hypothesisSdk,
         LoggerInterface $logger,
         Monitoring $monitoring,
-        callable $limit,
+        Limit $limit,
         bool $serializedTransform = false
     ) {
         parent::__construct($logger, $queue, $transformer, $monitoring, $limit, $serializedTransform);

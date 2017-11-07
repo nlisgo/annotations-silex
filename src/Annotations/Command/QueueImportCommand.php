@@ -3,6 +3,7 @@
 namespace eLife\Annotations\Command;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\Bus\Limit\Limit;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
@@ -34,7 +35,7 @@ final class QueueImportCommand extends Command
         WatchableQueue $queue,
         LoggerInterface $logger,
         Monitoring $monitoring,
-        callable $limit,
+        Limit $limit,
         $supports = []
     ) {
         parent::__construct(null);
