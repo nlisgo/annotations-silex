@@ -12,6 +12,7 @@ use Knp\Console\Application;
 use LogicException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use ReflectionClass;
 
 class AnnotationsServiceProvider implements ServiceProviderInterface
 {
@@ -23,7 +24,7 @@ class AnnotationsServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         if (!isset($container['console'])) {
-            throw new LogicException('You must register the ConsoleServiceProvider to use the '.self::class.'.');
+            throw new LogicException(sprintf('You must register the ConsoleServiceProvider to use the %s.', (new ReflectionClass(self::class))->getShortName()));
         }
 
         $container->extend('console', function (Application $console) use ($container) {

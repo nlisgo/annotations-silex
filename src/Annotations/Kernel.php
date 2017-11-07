@@ -255,13 +255,8 @@ final class Kernel implements MinimalKernel
             'annotations.logger' => $app['logger'],
             'annotations.monitoring' => $app['monitoring'],
             'annotations.api.sdk' => $app['api.sdk'],
-            // When I pass limit.interactive and limit.long_running without wrapping it in a closure it fails the typehint in QueueImportCommand and QueueWatchCommand
-            'annotations.limit.interactive' => function (Application $app) {
-                return $app['limit.interactive'];
-            },
-            'annotations.limit.long_running' => function (Application $app) {
-                return $app['limit.long_running'];
-            },
+            'annotations.limit.interactive' => $app->protect($app['limit.interactive']),
+            'annotations.limit.long_running' => $app->protect($app['limit.long_running']),
             'annotations.hypothesis.sdk' => $app['hypthesis.sdk'],
         ]);
     }
