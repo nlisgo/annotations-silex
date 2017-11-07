@@ -7,6 +7,9 @@ php:
 # Allows use container-based infrastructure
 sudo: false
 
+services:
+  - docker
+
 # Cache composer packages so "composer install" is faster
 cache:
   directories:
@@ -15,6 +18,10 @@ cache:
 # Update composer
 before-install:
   - composer self-update
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+  - docker pull pafortin/goaws
+  - docker run -d --name goaws -p 4100:4100 pafortin/goaws
 
 # Install composer dependencies
 install:
