@@ -69,7 +69,7 @@ final class ApiSdkTest extends PHPUnit_Framework_TestCase
 
         $request = new Request(
             'PATCH',
-            'api/user/user',
+            'api/users/user',
             ['Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
             '{}'
         );

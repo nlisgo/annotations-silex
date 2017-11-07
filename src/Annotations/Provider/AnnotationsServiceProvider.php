@@ -5,6 +5,7 @@ namespace eLife\Annotations\Provider;
 use eLife\Annotations\Command\QueueCreateCommand;
 use eLife\Annotations\Command\QueueImportCommand;
 use eLife\Annotations\Command\QueuePushCommand;
+use eLife\Annotations\Command\QueueWatchCommand;
 use eLife\Bus\Command\QueueCleanCommand;
 use eLife\Bus\Command\QueueCountCommand;
 use Knp\Console\Application;
@@ -35,7 +36,15 @@ class AnnotationsServiceProvider implements ServiceProviderInterface
                 $container['annotations.sqs.queue'],
                 $container['annotations.logger'],
                 $container['annotations.monitoring'],
-                $container['annotations.limit']
+                $container['annotations.limit.interactive']
+            ));
+            $console->add(new QueueWatchCommand(
+                $container['annotations.sqs.queue'],
+                $container['annotations.sqs.queue_transformer'],
+                $container['annotations.hypothesis.sdk'],
+                $container['annotations.logger'],
+                $container['annotations.monitoring'],
+                $container['annotations.limit.long_running']
             ));
 
             return $console;

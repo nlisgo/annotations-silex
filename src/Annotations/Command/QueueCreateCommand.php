@@ -49,6 +49,7 @@ final class QueueCreateCommand extends Command
             $this->logger->warning($message);
             $io->warning($message);
         } catch (SqsException $exception) {
+            $this->sqsClient->createQueue($args);
             $message = sprintf('Queue "%s" created successfully.', $args['QueueName']);
             $this->logger->info($message);
             $io->success($message);

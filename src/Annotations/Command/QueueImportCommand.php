@@ -96,21 +96,21 @@ final class QueueImportCommand extends Command
 
     public function importProfiles()
     {
-        $this->logger->info('Importing Profiles');
+        $this->logger->info('Importing Profiles.');
         $profiles = $this->sdk->profiles();
-        $this->iterateSerializeTask($profiles, '', 'getId', $profiles->count());
+        $this->iterateSerializeTask($profiles, 'profile', 'getId', $profiles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0)
     {
-        $this->logger->info("Importing $count items of type $type");
+        $this->logger->info(sprintf('Importing %d items of type "%s".', $count, $type));
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
         $items->rewind();
         while ($items->valid()) {
             if ($limit()) {
-                throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
+                throw new RuntimeException(sprintf('Command cannot complete because: %s.', implode(', ', $limit->getReasons())));
             }
             $progress->advance();
             try {
@@ -122,8 +122,9 @@ final class QueueImportCommand extends Command
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
-                $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
-                $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
+                $message = sprintf('Skipping import on a %s.', get_class($item));
+                $this->logger->error($message, ['exception' => $e]);
+                $this->monitoring->recordException($e, $message);
             }
             $items->next();
         }
@@ -133,9 +134,9 @@ final class QueueImportCommand extends Command
 
     private function enqueue($type, $identifier)
     {
-        $this->logger->info("Item ($type, $identifier) being enqueued");
+        $this->logger->info(sprintf('Item (%s, %s) being enqueued.', $type, $identifier));
         $item = new InternalSqsMessage($type, $identifier);
         $this->queue->enqueue($item);
-        $this->logger->info("Item ($type, $identifier) enqueued successfully");
+        $this->logger->info(sprintf('Item (%s, %s) enqueued successfully.', $type, $identifier));
     }
 }

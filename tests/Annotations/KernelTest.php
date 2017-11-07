@@ -2,17 +2,8 @@
 
 namespace tests\eLife\Annotations;
 
-use eLife\Annotations\Kernel;
-use Silex\WebTestCase;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-
-class KernelTest extends WebTestCase
+class KernelTest extends KernelTestCase
 {
-    public function createApplication() : HttpKernelInterface
-    {
-        return (new Kernel())->getApp();
-    }
-
     /**
      * @test
      */

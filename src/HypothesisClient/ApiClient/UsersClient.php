@@ -16,7 +16,7 @@ final class UsersClient implements ApiClientInterface
     ) : PromiseInterface {
         return $this->patchRequest(
             Uri::fromParts([
-                'path' => 'api/user/'.$id,
+                'path' => 'api/users/'.$id,
             ]),
             $headers,
             '{}'
@@ -57,7 +57,7 @@ final class UsersClient implements ApiClientInterface
 
         return $this->patchRequest(
             Uri::fromParts([
-                'path' => 'api/user/'.$id,
+                'path' => 'api/users/'.$id,
             ]),
             $headers,
             json_encode(array_filter([

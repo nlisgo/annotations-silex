@@ -12,11 +12,16 @@ use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\HttpClient\NotifyingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\CompositeLimit;
-use eLife\Bus\Limit\LoggingMiddleware;
+use eLife\Bus\Limit\LoggingLimit;
 use eLife\Bus\Limit\MemoryLimit;
 use eLife\Bus\Limit\SignalsLimit;
 use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
+use eLife\HypothesisClient\Credentials\Credentials;
+use eLife\HypothesisClient\HttpClient\BatchingHttpClient as HypothesisBatchingHttpClient;
+use eLife\HypothesisClient\HttpClient\Guzzle6HttpClient as HypothesisGuzzle6HttpClient;
+use eLife\HypothesisClient\HttpClient\NotifyingHttpClient as HypothesisNotifyingHttpClient;
+use eLife\HypothesisClient\ApiSdk as HypothesisApiSdk;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
 use eLife\Ping\Silex\PingControllerProvider;
@@ -49,11 +54,12 @@ final class Kernel implements MinimalKernel
         // Load config
         $app['config'] = array_merge([
             'debug' => false,
-            'ttl' => 0,
+            'ttl' => 300,
             'file_logs_path' => self::LOGS_DIR,
             'logging_level' => Logger::INFO,
             'api_url' => '',
             'api_requests_batch' => 10,
+            'process_memory_limit' => 256,
         ], $config);
         $app->register(new PingControllerProvider());
         if ($app['config']['debug']) {
@@ -103,7 +109,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit.long_running'] = function (Application $app) {
-            return new LoggingMiddleware(
+            return new LoggingLimit(
                 new CompositeLimit(
                     $app['limit._memory'],
                     $app['limit._signals']
@@ -113,10 +119,55 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit.interactive'] = function (Application $app) {
-            return new LoggingMiddleware(
+            return new LoggingLimit(
                 $app['limit._signals'],
                 $app['logger']
             );
+        };
+
+        $app['hypothesis.guzzle'] = function (Application $app) {
+            // Create default HandlerStack
+            $stack = HandlerStack::create();
+            $logger = $app['logger'];
+            if ($app['config']['debug']) {
+                $stack->push(
+                    Middleware::mapRequest(function ($request) use ($logger) {
+                        $logger->debug("Request performed in Guzzle Middleware: {$request->getUri()}");
+
+                        return $request;
+                    })
+                );
+            }
+
+            return new Client([
+                'base_uri' => $app['config']['hypothesis']['api_url'],
+                'handler' => $stack,
+            ]);
+        };
+
+        $app['hypthesis.sdk'] = function (Application $app) {
+            $notifyingHttpClient = new HypothesisNotifyingHttpClient(
+                new HypothesisBatchingHttpClient(
+                    new HypothesisGuzzle6HttpClient(
+                        $app['hypothesis.guzzle']
+                    ),
+                    $app['config']['api_requests_batch']
+                )
+            );
+            if ($app['config']['debug']) {
+                $logger = $app['logger'];
+                $notifyingHttpClient->addRequestListener(function ($request) use ($logger) {
+                    $logger->debug("Request performed in NotifyingHttpClient: {$request->getUri()}");
+                });
+            }
+
+            $credentials = new Credentials(
+                $app['config']['hypothesis']['client_id'],
+                $app['config']['hypothesis']['secret_key'],
+                $app['config']['hypothesis']['authority']
+            );
+
+            return new HypothesisApiSdk($notifyingHttpClient, $credentials);
         };
 
         $app['guzzle'] = function (Application $app) {
@@ -200,10 +251,14 @@ final class Kernel implements MinimalKernel
             'annotations.sqs.region' => $app['config']['aws']['region'],
             'annotations.sqs.queue_name' => $app['config']['aws']['queue_name'],
             'annotations.sqs.queue_message_type' => $app['config']['aws']['queue_message_default_type'],
+            'annotations.sqs.queue_transformer' => $app['aws.queue_transformer'],
             'annotations.logger' => $app['logger'],
             'annotations.monitoring' => $app['monitoring'],
             'annotations.api.sdk' => $app['api.sdk'],
-            'annotations.limit' => function (Application $app) { return $app['limit.interactive']; },
+            // When I pass limit.interactive and limit.long_running without wrapping it in a closure it fails the typehint in QueueImportCommand and QueueWatchCommand
+            'annotations.limit.interactive' => function (Application $app) { return $app['limit.interactive']; },
+            'annotations.limit.long_running' => function (Application $app) { return $app['limit.long_running']; },
+            'annotations.hypothesis.sdk' => $app['hypthesis.sdk'],
         ]);
     }
 

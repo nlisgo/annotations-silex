@@ -555,30 +555,36 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "05d280400f9a773905be9c1b637a09aea5c7dea3"
+                "reference": "dec6acbe1741e26a1721af77af1fc6d938ac0c95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/05d280400f9a773905be9c1b637a09aea5c7dea3",
-                "reference": "05d280400f9a773905be9c1b637a09aea5c7dea3",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/dec6acbe1741e26a1721af77af1fc6d938ac0c95",
+                "reference": "dec6acbe1741e26a1721af77af1fc6d938ac0c95",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.19",
                 "doctrine/cache": "^1.6",
-                "elife/api-sdk": "dev-master",
-                "elife/logging-sdk": "dev-master",
+                "elife/api-sdk": "^1.0",
+                "elife/logging-sdk": "^1.0",
                 "jms/serializer": "^1.4",
-                "psr/log": "1.0.*"
+                "php": "^7.0",
+                "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7",
-                "symfony/console": "^3.2"
+                "phpunit/phpunit": "^5.7 || ^6.0",
+                "symfony/console": "^2.7 || ^3.2"
             },
             "suggest": {
-                "symfony/console": "To use Command classes"
+                "symfony/console": "^2.7 || ^3.2, to use Command classes"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "eLife\\Bus\\": "./src"
@@ -588,8 +594,8 @@
             "license": [
                 "MIT"
             ],
-            "description": "eLife Sciences bus SDK",
-            "time": "2017-05-31 09:01:46"
+            "description": "eLife Sciences Bus SDK",
+            "time": "2017-11-07 11:04:07"
         },
         {
             "name": "elife/logging-sdk",

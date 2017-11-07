@@ -54,7 +54,6 @@ trait ApiClientTrait
         $headers = array_merge($this->headers, $headers);
 
         $request = new Request('POST', $uri, $headers, $content);
-
         return $this->httpClient->send($request);
     }
 

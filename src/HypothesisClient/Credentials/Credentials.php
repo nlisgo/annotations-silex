@@ -14,7 +14,7 @@ class Credentials implements CredentialsInterface, Serializable
     {
         $this->clientId = trim($clientId);
         $this->secret = trim($secret);
-        $this->authority = (is_string($authority)) ? trim($authority) : $authority;
+        $this->authority = trim($authority);
     }
 
     public function getClientId() : string

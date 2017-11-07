@@ -6,12 +6,18 @@ return [
     'debug' => true,
     'ttl' => 0,
     'logging_level' => Logger::DEBUG,
+    'api_url' => 'http://0.0.0.0:1234/',
+    'hypothesis' => [
+        'api_url' => 'https://hypothes.is/',
+        'client_id' => '',
+        'secret_key' => '',
+        'authority' => '',
+    ],
     'aws' => [
-        'mock_queue' => false,
-        'queue_name' => 'annotations-local',
+        'queue_name' => 'annotations--local',
         'queue_message_default_type' => 'profile',
-        'key' => '-----------------------',
-        'secret' => '-------------------------------',
-        'region' => '---------',
+        'credential_file' => true,
+        'region' => 'us-east-1',
+        'endpoint' => 'http://localhost:4100',
     ],
 ];
