@@ -70,6 +70,7 @@ final class QueueImportCommand extends Command
             $message = sprintf('Entity with name %s not supported.', $entity);
             $this->logger->error($message);
             $io->error($message);
+
             return;
         }
 

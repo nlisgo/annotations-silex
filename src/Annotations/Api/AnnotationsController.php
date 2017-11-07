@@ -4,7 +4,6 @@ namespace eLife\Annotations\Api;
 
 use Doctrine\Common\Cache\Cache;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 final class AnnotationsController
 {

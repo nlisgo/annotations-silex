@@ -79,7 +79,7 @@ final class QueueWatchCommand extends QueueCommand
                         // Unable to modify user, check is email address is already associated with a different user.
                         if (preg_match(
                             '/user with email address [^\s]+ already exists/',
-                            (string)$exception->getResponse()->getBody()
+                            (string) $exception->getResponse()->getBody()
                         )) {
                             try {
                                 // Try to modify user, with backup email address.
