@@ -18,7 +18,7 @@ return [
         'queue_message_default_type' => 'profile',
         'key' => '-----------------------',
         'secret' => '-------------------------------',
-        'region' => '---------',
+        'region' => 'us-east-1',
         'endpoint' => 'http://localhost:4100',
     ],
 ];

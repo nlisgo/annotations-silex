@@ -10,6 +10,11 @@ sudo: required
 services:
   - docker
 
+env:
+  AWS_ACCESS_KEY_ID=TRAVIS
+  AWS_SECRET_ACCESS_KEY=TRAVIS
+  AWS_REGION=us-east-1
+
 # Cache composer packages so "composer install" is faster
 cache:
   directories:
@@ -18,15 +23,19 @@ cache:
 # Update composer
 before-install:
   - composer self-update
-  - sudo pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-  - docker pull pafortin/goaws
-  - docker run -d --name goaws -p 4100:4100 pafortin/goaws
 
 # Install composer dependencies
 install:
   - composer install
-  - aws --endpoint-url http://localhost:4100 sqs create-queue --queue-name annotations--travis
+  # Document the version travis is using
+  - docker --version
+  # Install aws cli w/o sudo
+  - pip install --user awscli
+  # Put aws in the path
+  - export PATH=$PATH:$HOME/.local/bin
+  - docker pull pafortin/goaws
+  - docker run -d --name goaws -p 4100:4100 pafortin/goaws
+  - aws --endpoint-url http://localhost:4100 sqs create-queue --queue-name annotations--travis --region=$AWS_REGION
   - cp ./config/travis.php ./config/local.php
 
 # Run script
