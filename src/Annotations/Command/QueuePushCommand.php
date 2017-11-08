@@ -2,7 +2,7 @@
 
 namespace eLife\Annotations\Command;
 
-use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\WatchableQueue;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -14,13 +14,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class QueuePushCommand extends Command
 {
     private $queue;
+    private $messageFactory;
     private $logger;
 
-    public function __construct(WatchableQueue $queue, LoggerInterface $logger, $type = null)
+    public function __construct(WatchableQueue $queue, InternalSqsMessageFactory $messageFactory, LoggerInterface $logger, $type = null)
     {
         parent::__construct(null);
 
         $this->queue = $queue;
+        $this->messageFactory = $messageFactory;
         $this->logger = $logger;
         $this->addArgument('type', !empty($type) ? InputArgument::OPTIONAL : InputArgument::REQUIRED, '', $type);
     }
@@ -38,8 +40,7 @@ final class QueuePushCommand extends Command
         $id = $input->getArgument('id');
         $type = $input->getArgument('type');
         // Create queue item.
-        // @todo - elife - nlisgo - Introduce InternalSqsMessage with DI.
-        $item = new InternalSqsMessage($type, $id);
+        $item = $this->messageFactory::create($type, $id);
         // Queue item.
         $this->queue->enqueue($item);
 

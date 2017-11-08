@@ -15,6 +15,7 @@ use eLife\Bus\Limit\CompositeLimit;
 use eLife\Bus\Limit\LoggingLimit;
 use eLife\Bus\Limit\MemoryLimit;
 use eLife\Bus\Limit\SignalsLimit;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\HypothesisClient\ApiSdk as HypothesisApiSdk;
@@ -227,6 +228,10 @@ final class Kernel implements MinimalKernel
             return new SqsClient($config);
         };
 
+        $app['aws.sqs.message_factory'] = function (Application $app) {
+            return new InternalSqsMessageFactory();
+        };
+
         $app['aws.queue'] = function (Application $app) {
             return new SqsWatchableQueue($app['aws.sqs'], $app['config']['aws']['queue_name']);
         };
@@ -249,6 +254,7 @@ final class Kernel implements MinimalKernel
             'annotations.sqs' => $app['aws.sqs'],
             'annotations.sqs.queue' => $app['aws.queue'],
             'annotations.sqs.region' => $app['config']['aws']['region'],
+            'annotations.sqs.message_factory' => $app['aws.sqs.message_factory'],
             'annotations.sqs.queue_name' => $app['config']['aws']['queue_name'],
             'annotations.sqs.queue_message_type' => $app['config']['aws']['queue_message_default_type'],
             'annotations.sqs.queue_transformer' => $app['aws.queue_transformer'],

@@ -5,6 +5,7 @@ namespace tests\eLife\Annotations\Command;
 use eLife\Annotations\Command\QueueImportCommand;
 use eLife\Annotations\Command\QueuePushCommand;
 use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\WatchableQueue;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
@@ -24,6 +25,8 @@ class QueuePushCommandTest extends PHPUnit_Framework_TestCase
     /** @var CommandTester */
     private $commandTester;
     private $logger;
+    /** @var InternalSqsMessageFactory */
+    private $messageFactory;
     private $queue;
 
     /**
@@ -35,6 +38,7 @@ class QueuePushCommandTest extends PHPUnit_Framework_TestCase
         $this->logger = $this->getMockBuilder(LoggerInterface::class)
             ->setMethods(['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'])
             ->getMock();
+        $this->messageFactory = new InternalSqsMessageFactory();
         $this->queue = $this->getMockBuilder(WatchableQueue::class)
             ->setMethods(['enqueue', 'dequeue', 'commit', 'release', 'clean', 'getName', 'count'])
             ->getMock();
@@ -103,7 +107,7 @@ class QueuePushCommandTest extends PHPUnit_Framework_TestCase
 
     private function prepareCommandTester($type = null)
     {
-        $this->command = new QueuePushCommand($this->queue, $this->logger, $type);
+        $this->command = new QueuePushCommand($this->queue, $this->messageFactory, $this->logger, $type);
         $this->application->add($this->command);
         $this->commandTester = new CommandTester($command = $this->application->get($this->command->getName()));
     }

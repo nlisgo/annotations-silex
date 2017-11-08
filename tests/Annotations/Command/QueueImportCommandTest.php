@@ -7,6 +7,7 @@ use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\Result\HttpResult;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\Limit;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
 use GuzzleHttp\Promise\FulfilledPromise;
@@ -34,6 +35,8 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
     private $httpClient;
     private $limit;
     private $logger;
+    /** @var InternalSqsMessageFactory */
+    private $messageFactory;
     /** @var Monitoring */
     private $monitoring;
     /** @var Serializer */
@@ -54,12 +57,13 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
         $this->logger = $this->getMockBuilder(LoggerInterface::class)
             ->setMethods(['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'])
             ->getMock();
+        $this->messageFactory = new InternalSqsMessageFactory();
         $this->monitoring = new Monitoring();
         $this->serializer = $this->apiSdk->getSerializer();
         $this->queue = $this->getMockBuilder(WatchableQueue::class)
             ->setMethods(['enqueue', 'dequeue', 'commit', 'release', 'clean', 'getName', 'count'])
             ->getMock();
-        $this->command = new QueueImportCommand($this->apiSdk, $this->queue, $this->logger, $this->monitoring, $this->limit);
+        $this->command = new QueueImportCommand($this->apiSdk, $this->queue, $this->messageFactory, $this->logger, $this->monitoring, $this->limit);
         $this->application->add($this->command);
         $this->commandTester = new CommandTester($command = $this->application->get($this->command->getName()));
     }

@@ -7,6 +7,7 @@ use eLife\Annotations\Provider\AnnotationsServiceProvider;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\Limit;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\HypothesisClient\ApiSdk as HypothesisApiSdk;
@@ -60,6 +61,7 @@ final class AnnotationsServiceProviderTest extends PHPUnit_Framework_TestCase
             'annotations.logger' => $this->logger,
             'annotations.monitoring' => new Monitoring(),
             'annotations.sqs' => $this->sqs,
+            'annotations.sqs.message_factory' => new InternalSqsMessageFactory(),
             'annotations.sqs.queue' => $this->queue,
             'annotations.sqs.queue_transformer' => $this->createMock(QueueItemTransformer::class),
         ];

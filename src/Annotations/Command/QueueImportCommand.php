@@ -4,7 +4,7 @@ namespace eLife\Annotations\Command;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\Limit;
-use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\InternalSqsMessageFactory;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
 use Iterator;
@@ -27,6 +27,7 @@ final class QueueImportCommand extends Command
     private $serializer;
     private $output;
     private $logger;
+    private $messageFactory;
     private $monitoring;
     private $queue;
     private $limit;
@@ -34,6 +35,7 @@ final class QueueImportCommand extends Command
     public function __construct(
         ApiSdk $sdk,
         WatchableQueue $queue,
+        InternalSqsMessageFactory $messageFactory,
         LoggerInterface $logger,
         Monitoring $monitoring,
         Limit $limit,
@@ -45,6 +47,7 @@ final class QueueImportCommand extends Command
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
+        $this->messageFactory = $messageFactory;
         $this->monitoring = $monitoring;
         $this->limit = $limit;
         $supports = array_intersect(self::$supports, (array) $supports);
@@ -137,8 +140,7 @@ final class QueueImportCommand extends Command
     private function enqueue($type, $identifier)
     {
         $this->logger->info(sprintf('Item (%s, %s) being enqueued.', $type, $identifier));
-        // @todo - elife - nlisgo - Introduce InternalSqsMessage with DI.
-        $item = new InternalSqsMessage($type, $identifier);
+        $item = $this->messageFactory::create($type, $identifier);
         $this->queue->enqueue($item);
         $this->logger->info(sprintf('Item (%s, %s) enqueued successfully.', $type, $identifier));
     }

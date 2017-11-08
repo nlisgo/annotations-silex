@@ -30,11 +30,12 @@ class AnnotationsServiceProvider implements ServiceProviderInterface
         $container->extend('console', function (Application $console) use ($container) {
             $console->add(new QueueCleanCommand($container['annotations.sqs.queue'], $container['annotations.logger']));
             $console->add(new QueueCountCommand($container['annotations.sqs.queue']));
-            $console->add(new QueuePushCommand($container['annotations.sqs.queue'], $container['annotations.logger'], $container['annotations.sqs.queue_message_type'] ?? null));
+            $console->add(new QueuePushCommand($container['annotations.sqs.queue'], $container['annotations.sqs.message_factory'], $container['annotations.logger'], $container['annotations.sqs.queue_message_type'] ?? null));
             $console->add(new QueueCreateCommand($container['annotations.sqs'], $container['annotations.logger'], $container['annotations.sqs.queue_name'] ?? null, $container['annotations.sqs.region'] ?? null));
             $console->add(new QueueImportCommand(
                 $container['annotations.api.sdk'],
                 $container['annotations.sqs.queue'],
+                $container['annotations.sqs.message_factory'],
                 $container['annotations.logger'],
                 $container['annotations.monitoring'],
                 $container['annotations.limit.interactive']
