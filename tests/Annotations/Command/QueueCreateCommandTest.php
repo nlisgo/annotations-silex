@@ -12,6 +12,9 @@ use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * @covers \eLife\Annotations\Command\QueueCreateCommand
+ */
 class QueueCreateCommandTest extends PHPUnit_Framework_TestCase
 {
     /** @var Application */
@@ -46,6 +49,22 @@ class QueueCreateCommandTest extends PHPUnit_Framework_TestCase
         $this->prepareCommandTester();
         $this->mockNewQueueExpectation('newQueue');
         $this->assertEquals('[OK] Queue "newQueue" created successfully.', trim($this->commandTester->getDisplay()));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_update_the_log()
+    {
+        $this->logger
+            ->expects($this->exactly(1))
+            ->method('info');
+        $this->logger
+            ->expects($this->at(0))
+            ->method('info')
+            ->with('Queue "newQueue" created successfully.');
+        $this->prepareCommandTester();
+        $this->mockNewQueueExpectation('newQueue');
     }
 
     /**

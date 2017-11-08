@@ -105,7 +105,7 @@ final class QueueImportCommand extends Command
 
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0)
     {
-        $this->logger->info(sprintf('Importing %d items of type "%s".', $count, $type));
+        $this->logger->info(sprintf('Importing %d item(s) of type "%s".', $count, $type));
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
