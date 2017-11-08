@@ -5,7 +5,6 @@ namespace tests\eLife\Annotations\Provider;
 use Aws\Sqs\SqsClient;
 use eLife\Annotations\Provider\AnnotationsServiceProvider;
 use eLife\ApiClient\HttpClient;
-use eLife\ApiClient\Result\HttpResult;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Bus\Limit\Limit;
 use eLife\Bus\Queue\QueueItemTransformer;
@@ -13,15 +12,11 @@ use eLife\Bus\Queue\WatchableQueue;
 use eLife\HypothesisClient\ApiSdk as HypothesisApiSdk;
 use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\Logging\Monitoring;
-use GuzzleHttp\Promise\FulfilledPromise;
-use GuzzleHttp\Psr7\Response;
 use Knp\Console\Application as ConsoleApplication;
 use Knp\Provider\ConsoleServiceProvider;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
 use Silex\Application;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @covers \eLife\Annotations\Provider\AnnotationsServiceProvider

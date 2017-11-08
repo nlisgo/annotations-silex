@@ -61,7 +61,7 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
             ->getMock();
         $this->command = new QueueImportCommand($this->apiSdk, $this->queue, $this->logger, $this->monitoring, $this->limit);
         $this->application->add($this->command);
-        $this->commandTester = new CommandTester($command = $this->application->get('queue:import'));
+        $this->commandTester = new CommandTester($command = $this->application->get($this->command->getName()));
     }
 
     /**
@@ -155,7 +155,7 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
     {
         $items = [];
         if ($count > 0) {
-            for ($i=0; $i<$count; $i++) {
+            for ($i = 0; $i < $count; ++$i) {
                 $items[] = [
                     'id' => 'id'.$i,
                     'name' => [
@@ -172,5 +172,4 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
 
         return new FulfilledPromise(HttpResult::fromResponse(new Response(200, ['Content-Type' => 'application/vnd.elife.profile-list+json; version=1'], json_encode($json))));
     }
-
 }

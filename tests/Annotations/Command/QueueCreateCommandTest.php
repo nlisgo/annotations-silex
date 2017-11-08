@@ -85,9 +85,7 @@ class QueueCreateCommandTest extends PHPUnit_Framework_TestCase
         $this->prepareCommandTester();
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Not enough arguments (missing: "queueName").');
-        $this->commandTester->execute([
-            'command' => $this->command->getName(),
-        ]);
+        $this->commandTesterExecute(null);
     }
 
     /**
@@ -124,7 +122,7 @@ class QueueCreateCommandTest extends PHPUnit_Framework_TestCase
     {
         $this->command = new QueueCreateCommand($this->sqs, $this->logger, $queueName, $region);
         $this->application->add($this->command);
-        $this->commandTester = new CommandTester($command = $this->application->get('queue:create'));
+        $this->commandTester = new CommandTester($command = $this->application->get($this->command->getName()));
     }
 
     private function mockNewQueueExpectation($sqsQueueName, $sqsRegion = null, $cmdQueueName = null, $cmdRegion = null)
