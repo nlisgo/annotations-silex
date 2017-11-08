@@ -13,7 +13,7 @@
         "php": ">=7.1",
         "beberlei/assert": "^2.7",
         "elife/api-sdk": "^1.0@dev",
-        "elife/bus-sdk": "dev-master",
+        "elife/bus-sdk": "dev-feature/queue-item-factory",
         "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "knplabs/console-service-provider": "^2.1",

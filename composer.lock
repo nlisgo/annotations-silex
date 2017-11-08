@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd1c7536fab593d28a19cd946415b925",
+    "content-hash": "b43a71fe4c16e7fce0d4e8d0fb6793c7",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -551,16 +551,16 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "dev-master",
+            "version": "dev-feature/queue-item-factory",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66"
+                "reference": "fe0c7f8ed4c9bc3553698157358824eb405092aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/fe0c7f8ed4c9bc3553698157358824eb405092aa",
+                "reference": "fe0c7f8ed4c9bc3553698157358824eb405092aa",
                 "shasum": ""
             },
             "require": {
@@ -595,7 +595,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2017-11-07 11:05:45"
+            "time": "2017-11-08 17:29:29"
         },
         {
             "name": "elife/logging-sdk",
