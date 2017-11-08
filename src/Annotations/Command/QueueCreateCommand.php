@@ -43,14 +43,15 @@ final class QueueCreateCommand extends Command
         ];
 
         $io = new SymfonyStyle($input, $output);
+        $in_region = (!empty($args['Region'])) ? ' ('.$args['Region'].')' : '';
         try {
             $this->sqsClient->getQueueUrl($args);
-            $message = sprintf('Queue "%s" already exists.', $args['QueueName']);
+            $message = sprintf('Queue "%s"%s already exists.', $args['QueueName'], $in_region);
             $this->logger->warning($message);
             $io->warning($message);
         } catch (SqsException $exception) {
             $this->sqsClient->createQueue($args);
-            $message = sprintf('Queue "%s" created successfully.', $args['QueueName']);
+            $message = sprintf('Queue "%s"%s created successfully.', $args['QueueName'], $in_region);
             $this->logger->info($message);
             $io->success($message);
         }

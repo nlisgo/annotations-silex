@@ -11,6 +11,7 @@ use Iterator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,11 +69,10 @@ final class QueueImportCommand extends Command
         $entity = $input->getArgument('entity');
         // Only the configured.
         if ($entity !== 'all' && !in_array($entity, self::$supports)) {
-            $message = sprintf('Entity with name %s not supported.', $entity);
+            $message = sprintf('Entity with name "%s" not supported.', $entity);
             $this->logger->error($message);
             $io->error($message);
-
-            return;
+            throw new InvalidArgumentException($message);
         }
 
         try {

@@ -3,10 +3,10 @@
 namespace tests\eLife\Annotations;
 
 use eLife\Annotations\Kernel;
-use Silex\WebTestCase;
+use Silex\WebTestCase as SilexWebTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-abstract class KernelTestCase extends WebTestCase
+abstract class WebTestCase extends SilexWebTestCase
 {
     protected $isLocal;
     /** @var Kernel */
