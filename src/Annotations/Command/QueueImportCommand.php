@@ -76,7 +76,7 @@ final class QueueImportCommand extends Command
         }
 
         try {
-            $this->monitoring->nameTransaction('queue:import');
+            $this->monitoring->nameTransaction($this->getName());
             $this->monitoring->startTransaction();
             $entities = ($entity === 'all') ? self::$supports : [$entity];
             foreach ($entities as $e) {
