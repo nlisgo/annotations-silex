@@ -9,7 +9,6 @@ use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Request;
-use InvalidArgumentException;
 use PHPUnit_Framework_TestCase;
 use tests\eLife\HypothesisClient\RequestConstraint;
 use TypeError;

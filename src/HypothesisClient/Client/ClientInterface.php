@@ -2,4 +2,6 @@
 
 namespace eLife\HypothesisClient\Client;
 
-interface ClientInterface {}
+interface ClientInterface
+{
+}

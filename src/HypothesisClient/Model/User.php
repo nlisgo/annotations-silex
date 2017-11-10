@@ -46,7 +46,7 @@ final class User implements ModelInterface, CanBeValidated
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validate() : bool
     {

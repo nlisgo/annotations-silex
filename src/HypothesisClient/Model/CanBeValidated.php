@@ -6,7 +6,6 @@ use InvalidArgumentException;
 
 interface CanBeValidated
 {
-
     /**
      * @throws InvalidArgumentException
      *

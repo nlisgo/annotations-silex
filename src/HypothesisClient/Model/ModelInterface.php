@@ -2,4 +2,6 @@
 
 namespace eLife\HypothesisClient\Model;
 
-interface ModelInterface {}
+interface ModelInterface
+{
+}

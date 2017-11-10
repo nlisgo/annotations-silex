@@ -85,4 +85,3 @@ class UsersTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($user, $this->users->get('username')->wait());
     }
 }
-

@@ -36,9 +36,11 @@ final class Users implements ClientInterface
      * Store the user by create first then, if user already detected, modify.
      *
      * @param User $user
+     *
      * @return PromiseInterface
      */
-    public function store(User $user) : PromiseInterface {
+    public function store(User $user) : PromiseInterface
+    {
         try {
             return $this->create($user);
         } catch (BadResponse $exception) {
