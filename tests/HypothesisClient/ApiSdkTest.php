@@ -2,11 +2,11 @@
 
 namespace tests\eLife\HypothesisClient;
 
-use eLife\HypothesisClient\ApiClient\AnnotationsClient;
-use eLife\HypothesisClient\ApiClient\UsersClient;
 use eLife\HypothesisClient\ApiSdk;
+use eLife\HypothesisClient\Client\Users;
 use eLife\HypothesisClient\Credentials\Credentials;
 use eLife\HypothesisClient\HttpClient\HttpClientInterface;
+use eLife\HypothesisClient\Model\User;
 use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Request;
@@ -29,22 +29,11 @@ final class ApiSdkTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_creates_an_annotations_client()
-    {
-        $this->assertInstanceOf(
-            AnnotationsClient::class,
-            (new ApiSdk($this->getMockBuilder(HttpClientInterface::class)->getMock()))->createAnnotations()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function it_creates_a_users_client()
     {
         $this->assertInstanceOf(
-            UsersClient::class,
-            (new ApiSdk($this->getMockBuilder(HttpClientInterface::class)->getMock()))->createUsers()
+            Users::class,
+            (new ApiSdk($this->getMockBuilder(HttpClientInterface::class)->getMock()))->users()
         );
     }
 
@@ -69,16 +58,23 @@ final class ApiSdkTest extends PHPUnit_Framework_TestCase
 
         $request = new Request(
             'PATCH',
-            'api/users/user',
+            'api/users/username',
             ['Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
             '{}'
         );
-        $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
+        $response = new FulfilledPromise(new ArrayResult([
+            'username' => 'username',
+            'email' => 'email@email.com',
+            'display_name' => 'Display Name',
+            'authority' => 'authority',
+        ]));
+
+        $user = new User('username', 'email@email.com', 'Display Name');
         $httpClient
             ->expects($this->once())
             ->method('send')
             ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
-        $this->assertEquals($response, $sdk->createUsers()->getUser([], 'user'));
+        $this->assertEquals($user, $sdk->users()->get('username')->wait());
     }
 }

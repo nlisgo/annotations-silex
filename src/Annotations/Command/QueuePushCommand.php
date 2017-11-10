@@ -38,7 +38,6 @@ final class QueuePushCommand extends Command
         $id = $input->getArgument('id');
         $type = $input->getArgument('type');
         // Create queue item.
-        // @todo - elife - nlisgo - Introduce InternalSqsMessage with DI.
         $item = new InternalSqsMessage($type, $id);
         // Queue item.
         $this->queue->enqueue($item);

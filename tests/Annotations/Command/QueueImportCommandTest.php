@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * @covers \eLife\Annotations\Command\QueueImportCommand
@@ -36,8 +35,6 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
     private $logger;
     /** @var Monitoring */
     private $monitoring;
-    /** @var Serializer */
-    private $serializer;
     private $queue;
 
     /**
@@ -55,7 +52,6 @@ class QueueImportCommandTest extends PHPUnit_Framework_TestCase
             ->setMethods(['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug', 'log'])
             ->getMock();
         $this->monitoring = new Monitoring();
-        $this->serializer = $this->apiSdk->getSerializer();
         $this->queue = $this->getMockBuilder(WatchableQueue::class)
             ->setMethods(['enqueue', 'dequeue', 'commit', 'release', 'clean', 'getName', 'count'])
             ->getMock();

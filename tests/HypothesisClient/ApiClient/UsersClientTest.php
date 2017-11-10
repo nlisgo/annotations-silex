@@ -76,83 +76,6 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider providerInvalidUserIds
-     */
-    public function it_rejects_invalid_user_ids($method, $id, $message = null)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->executeExceptionMessageRegExp($message);
-        $this->usersClient->{$method}([], $id, 'email@email.com', 'display_name');
-    }
-
-    public function providerInvalidUserIds()
-    {
-        foreach (['createUser', 'modifyUser'] as $method) {
-            yield $method.' id too short' => [$method, 'aa', 'must be between 3 and 30 characters'];
-            yield $method.' id too long' => [$method, 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz', 'must be between 3 and 30 characters'];
-            yield $method.' id with spaces' => [$method, 'aa a', 'does not match expression'];
-            yield $method.' id with invalid punctuation' => [$method, '!!', ['must be between 3 and 30 characters', 'does not match expression']];
-        }
-    }
-
-    /**
-     * @test
-     * @dataProvider providerInvalidEmails
-     */
-    public function it_rejects_invalid_emails($method, $email)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/was expected to be a valid e-mail address\./');
-        $this->usersClient->{$method}([], 'userid', $email, 'display_name');
-    }
-
-    public function providerInvalidEmails()
-    {
-        foreach (['createUser', 'modifyUser'] as $method) {
-            yield $method.' email with spaces' => [$method, 'email@email. com'];
-            yield $method.' email no @' => [$method, 'hostname.com'];
-        }
-    }
-
-    /**
-     * @test
-     * @dataProvider providerInvalidDisplayNames
-     */
-    public function it_rejects_invalid_display_names($method, $display_name, $message = null)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->executeExceptionMessageRegExp($message);
-        $this->usersClient->{$method}([], 'userid', 'email@email.com', $display_name);
-    }
-
-    public function providerInvalidDisplayNames()
-    {
-        foreach (['createUser', 'modifyUser'] as $method) {
-            yield $method.' display_name too long' => [$method, 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz', 'must be between 1 and 30 characters.'];
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function it_collects_all_validation_errors()
-    {
-        $id = '!';
-        $email = 'invalid';
-        $display_name = 'This display name is too long!!';
-        $messages = [
-            '1) User id: Value "!" must be between 3 and 30 characters.',
-            '2) User id: Value "!" does not match expression /^[A-Za-z0-9._]+$/.',
-            '3) User e-mail: Value "invalid" was expected to be a valid e-mail address.',
-            '4) User display name: Value "This display name is too long!!" must be between 1 and 30 characters.',
-        ];
-        $this->expectException(InvalidArgumentException::class);
-        $this->executeExceptionMessageRegExp($messages);
-        $this->usersClient->createUser([], $id, $email, $display_name);
-    }
-
-    /**
-     * @test
      */
     public function it_creates_a_user_with_credentials()
     {
@@ -198,39 +121,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
             ->method('send')
             ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
-        $this->assertEquals($response, $this->usersClient->modifyUser([], 'userid', 'email@email.com'));
-    }
-
-    /**
-     * @test
-     * @dataProvider providerEmailOrDisplayName
-     */
-    public function it_requires_an_email_or_display_name_when_modifying_user($email, $display_name)
-    {
-        $this->usersClient->setCredentials(new Credentials('client_id', 'secret_key', 'authority'));
-        $request = new Request(
-            'PATCH',
-            'api/users/userid',
-            ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
-            json_encode(array_filter(['email' => $email, 'display_name' => $display_name]))
-        );
-        $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
-        $this->httpClient
-            ->expects($this->once())
-            ->method('send')
-            ->with(RequestConstraint::equalTo($request))
-            ->willReturn($response);
-        $this->assertEquals($response, $this->usersClient->modifyUser([], 'userid', $email, $display_name));
-        $this->expectException(InvalidArgumentException::class);
-        $this->executeExceptionMessageRegExp('User e-mail and display name: Either an e-mail address or display name is required.');
-        $this->assertEquals($response, $this->usersClient->modifyUser([], 'userid'));
-    }
-
-    public function providerEmailOrDisplayName()
-    {
-        yield 'e-mail and display name' => ['email@email.com', 'display name'];
-        yield 'e-mail, no display name' => ['email@email.com', null];
-        yield 'display name, no e-mail' => [null, 'display name'];
+        $this->assertEquals($response, $this->usersClient->updateUser([], 'userid', 'email@email.com'));
     }
 
     /**
@@ -252,15 +143,5 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
             ->with(RequestConstraint::equalTo($request))
             ->willReturn($response);
         $this->assertEquals($response, $this->usersClient->getUser([], 'user'));
-    }
-
-    private function executeExceptionMessageRegExp($message = null, $glue = '.*\n.*')
-    {
-        if (!empty($message)) {
-            $messages = array_map(function ($msg) {
-                return preg_quote($msg, '/');
-            }, (array) $message);
-            $this->expectExceptionMessageRegExp('/'.implode($glue, $messages).'/');
-        }
     }
 }

@@ -2,67 +2,52 @@
 
 namespace eLife\HypothesisClient;
 
-use eLife\HypothesisClient\ApiClient\AnnotationsClient;
+use BadMethodCallException;
 use eLife\HypothesisClient\ApiClient\UsersClient;
+use eLife\HypothesisClient\Client\Users;
 use eLife\HypothesisClient\Credentials\CredentialsInterface;
 use eLife\HypothesisClient\HttpClient\HttpClientInterface;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerAwareInterface;
 
 final class ApiSdk
 {
-    /**
-     * @var \eLife\HypothesisClient\HttpClient\HttpClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var \eLife\HypothesisClient\Credentials\CredentialsInterface
-     */
+    /** @var CredentialsInterface */
     private $credentials;
+    /** @var HttpClientInterface */
+    private $httpClient;
+    /** @var SerializerAwareInterface */
+    private $normalizer;
 
     /**
-     * @var \eLife\HypothesisClient\ApiClient\AnnotationsClient
+     * @var Users
      */
-    private $annotationsClient;
-
-    /**
-     * @var \eLife\HypothesisClient\ApiClient\UsersClient
-     */
-    private $usersClient;
+    private $users;
 
     public function __construct(HttpClientInterface $httpClient, CredentialsInterface $credentials = null)
     {
         $this->httpClient = $httpClient;
         $this->credentials = $credentials;
-        $this->createAnnotations();
-        $this->createUsers();
+        $this->normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
+        $this->users();
     }
 
-    public function createAnnotations() : AnnotationsClient
+    public function users() : Users
     {
-        if (empty($this->annotationsClient)) {
-            $this->annotationsClient = new AnnotationsClient($this->httpClient);
+        if (empty($this->users)) {
+            $usersClient = new UsersClient($this->httpClient);
             if (!empty($this->credentials)) {
-                $this->annotationsClient->setCredentials($this->credentials);
+                $usersClient->setCredentials($this->credentials);
             }
+            $this->users = new Users($usersClient, $this->normalizer);
         }
 
-        return $this->annotationsClient;
-    }
-
-    public function createUsers() : UsersClient
-    {
-        if (empty($this->usersClient)) {
-            $this->usersClient = new UsersClient($this->httpClient);
-            if (!empty($this->credentials)) {
-                $this->usersClient->setCredentials($this->credentials);
-            }
-        }
-
-        return $this->usersClient;
+        return $this->users;
     }
 
     public function __call($name, array $args)
     {
-        throw new \BadMethodCallException("Unknown method: {$name}.");
+        throw new BadMethodCallException("Unknown method: {$name}.");
     }
 }

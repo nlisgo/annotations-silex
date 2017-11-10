@@ -137,7 +137,6 @@ final class QueueImportCommand extends Command
     private function enqueue($type, $identifier)
     {
         $this->logger->info(sprintf('Item (%s, %s) being enqueued.', $type, $identifier));
-        // @todo - elife - nlisgo - Introduce InternalSqsMessage with DI.
         $item = new InternalSqsMessage($type, $identifier);
         $this->queue->enqueue($item);
         $this->logger->info(sprintf('Item (%s, %s) enqueued successfully.', $type, $identifier));
