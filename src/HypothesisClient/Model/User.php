@@ -6,6 +6,8 @@ use Assert\Assert;
 
 final class User implements ModelInterface, CanBeValidated
 {
+    use ModelTrait;
+
     protected $username;
     private $email;
     private $displayName;

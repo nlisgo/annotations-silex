@@ -63,7 +63,10 @@ final class Users implements ClientInterface
                 $user->getDisplayName()
             )
             ->then(function (ResultInterface $result) {
-                return $this->normalizer->denormalize($result->toArray(), User::class);
+                $user = $this->normalizer->denormalize($result->toArray(), User::class);
+                $user->setNew();
+
+                return $user;
             });
     }
 

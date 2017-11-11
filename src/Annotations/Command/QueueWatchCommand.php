@@ -53,7 +53,7 @@ final class QueueWatchCommand extends QueueCommand
             }
             $user = new User($id, $email, $display_name);
             $store = $this->hypothesisSdk->users()->store($user)->wait();
-            $this->logger->info(sprintf('Hypothesis user "%s" successfully stored.', $store->getId()));
+            $this->logger->info(sprintf('Hypothesis user "%s" successfully %s.', $store->getId(), ($store->isNew() ? 'created' : 'updated')));
         }
     }
 }
