@@ -8,6 +8,7 @@ use eLife\HypothesisClient\Model\User;
 use eLife\HypothesisClient\Result\ResultInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use function GuzzleHttp\Promise\exception_for;
 
 final class Users implements ClientInterface
 {
@@ -41,17 +42,15 @@ final class Users implements ClientInterface
      */
     public function store(User $user) : PromiseInterface
     {
-        try {
-            return $this->create($user);
-        } catch (BadResponse $exception) {
-            $body = (string) $exception->getResponse()->getBody();
-            // If username exists then attempt to update the user.
-            if (preg_match('/user with username [^\s]+ already exists/', $body)) {
-                return $this->update($user);
-            } else {
-                throw $exception;
-            }
-        }
+        return $this->create($user)
+            ->otherwise(function ($reason) use ($user) {
+                $exception = exception_for($reason);
+                if ($exception instanceof BadResponse && preg_match('/user with username [^\s]+ already exists/', (string) $exception->getResponse()->getBody())) {
+                    return $this->update($user);
+                } else {
+                    throw $exception;
+                }
+            });
     }
 
     public function create(User $user) : PromiseInterface

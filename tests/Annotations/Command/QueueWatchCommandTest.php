@@ -72,7 +72,7 @@ class QueueWatchCommandTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(true);
     }
 
-    private function prepareCommandTester($serializedTransform = false, $mock = false)
+    private function prepareCommandTester($serializedTransform = false)
     {
         $this->command = new QueueWatchCommand($this->queue, $this->transformer, $this->hypothesisSdk, $this->logger, $this->monitoring, $this->limit, $serializedTransform);
         $this->application->add($this->command);
