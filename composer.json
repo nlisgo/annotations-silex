@@ -10,8 +10,11 @@
         }
     },
     "require": {
-        "php": ">=7.1",
+        "php": "^7.0",
         "beberlei/assert": "^2.7",
+        "doctrine/annotations": "1.4.0",
+        "doctrine/cache": "~v1.6.2",
+        "doctrine/instantiator": "~1.0.5",
         "elife/api-sdk": "^1.0@dev",
         "elife/bus-sdk": "dev-master",
         "elife/ping": "^1.0",
