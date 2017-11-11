@@ -8,6 +8,7 @@ use eLife\HypothesisClient\Exception\HttpProblem;
 use Exception;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;
+use TypeError;
 
 /**
  * @covers \eLife\HypothesisClient\Exception\HttpProblem
@@ -23,8 +24,12 @@ class HttpProblemTest extends PHPUnit_Framework_TestCase
             $this->getMockBuilder(HttpProblem::class)->getMock();
             $this->fail('A message is required');
         } catch (ArgumentCountError $error) {
+            // ArgumentCountError ^7.1
             $this->assertTrue(true, 'A message is required');
             $this->assertContains('Too few arguments', $error->getMessage());
+        } catch (TypeError $error) {
+            $this->assertTrue(true, 'A message is required');
+            $this->assertContains('none given', $error->getMessage());
         }
         $e = $this->getMockBuilder(HttpProblem::class)
             ->setConstructorArgs(['foo', $this->createMock(RequestInterface::class)])
@@ -43,8 +48,12 @@ class HttpProblemTest extends PHPUnit_Framework_TestCase
                 ->getMockForAbstractClass();
             $this->fail('A request is required');
         } catch (ArgumentCountError $error) {
+            // ArgumentCountError ^7.1
             $this->assertTrue(true, 'A request is required');
             $this->assertContains('Too few arguments', $error->getMessage());
+        } catch (TypeError $error) {
+            $this->assertTrue(true, 'A request is required');
+            $this->assertContains('none given', $error->getMessage());
         }
         $request = $this->createMock(RequestInterface::class);
         $e = $this->getMockBuilder(HttpProblem::class)

@@ -9,6 +9,7 @@ use Exception;
 use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use TypeError;
 
 /**
  * @covers \eLife\HypothesisClient\Exception\BadResponse
@@ -24,8 +25,12 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
             $this->getMockBuilder(BadResponse::class)->getMock();
             $this->fail('A message is required');
         } catch (ArgumentCountError $error) {
+            // ArgumentCountError ^7.1
             $this->assertTrue(true, 'A message is required');
             $this->assertContains('Too few arguments', $error->getMessage());
+        } catch (TypeError $error) {
+            $this->assertTrue(true, 'A message is required');
+            $this->assertContains('must be of the type string', $error->getMessage());
         }
         $e = new BadResponse('foo', $this->createMock(RequestInterface::class), $this->createMock(ResponseInterface::class));
         $this->assertEquals('foo', $e->getMessage());
@@ -42,8 +47,12 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
                 ->getMock();
             $this->fail('A request is required');
         } catch (ArgumentCountError $error) {
+            // ArgumentCountError ^7.1
             $this->assertTrue(true, 'A request is required');
             $this->assertContains('Too few arguments', $error->getMessage());
+        } catch (TypeError $error) {
+            $this->assertTrue(true, 'A request is required');
+            $this->assertContains('none given', $error->getMessage());
         }
         $request = $this->createMock(RequestInterface::class);
         $e = new BadResponse('foo', $request, $this->createMock(ResponseInterface::class));
@@ -61,8 +70,12 @@ class BadResponseTest extends PHPUnit_Framework_TestCase
                 ->getMock();
             $this->fail('A response is required');
         } catch (ArgumentCountError $error) {
+            // ArgumentCountError ^7.1
             $this->assertTrue(true, 'A response is required');
             $this->assertContains('Too few arguments', $error->getMessage());
+        } catch (TypeError $error) {
+            $this->assertTrue(true, 'A response is required');
+            $this->assertContains('none given', $error->getMessage());
         }
         $response = $this->createMock(ResponseInterface::class);
         $e = new BadResponse('foo', $this->createMock(RequestInterface::class), $response);
