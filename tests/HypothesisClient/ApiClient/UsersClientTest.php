@@ -58,7 +58,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
     {
         $request = new Request(
             'PATCH',
-            'api/users/user',
+            'users/user',
             ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient'],
             '{}'
         );
@@ -89,7 +89,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
         $this->usersClient->setCredentials(new Credentials('client_id', 'secret_key', 'authority'));
         $request = new Request(
             'POST',
-            'api/users',
+            'users',
             ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
             json_encode(['authority' => 'authority', 'username' => 'userid', 'email' => 'email@email.com', 'display_name' => 'display_name'])
         );
@@ -110,7 +110,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
         $this->usersClient->setCredentials(new Credentials('client_id', 'secret_key', 'authority'));
         $request = new Request(
             'PATCH',
-            'api/users/userid',
+            'users/userid',
             ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
             json_encode(['email' => 'email@email.com'])
         );
@@ -130,7 +130,7 @@ final class UsersClientTest extends PHPUnit_Framework_TestCase
     {
         $request = new Request(
             'PATCH',
-            'api/users/user',
+            'users/user',
             ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient'],
             '{}'
         );

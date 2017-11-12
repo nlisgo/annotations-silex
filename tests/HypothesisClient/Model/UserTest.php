@@ -113,6 +113,17 @@ final class UserTest extends PHPUnit_Framework_TestCase
         new User($id, $email, $display_name);
     }
 
+    /**
+     * @test
+     */
+    public function it_can_be_flagged_as_new()
+    {
+        $user = new User('username', 'email@email.com', 'Display Name');
+        $this->assertFalse($user->isNew());
+        $user->setNew();
+        $this->assertTrue($user->isNew());
+    }
+
     private function executeExceptionMessageRegExp($message = null, $glue = '.*\n.*')
     {
         if (!empty($message)) {

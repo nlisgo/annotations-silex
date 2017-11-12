@@ -15,7 +15,7 @@ final class UsersClient implements ApiClientInterface
     ) : PromiseInterface {
         return $this->patchRequest(
             Uri::fromParts([
-                'path' => 'api/users/'.$id,
+                'path' => 'users/'.$id,
             ]),
             $headers,
             '{}'
@@ -30,7 +30,7 @@ final class UsersClient implements ApiClientInterface
     ) : PromiseInterface {
         return $this->postRequest(
             Uri::fromParts([
-                'path' => 'api/users',
+                'path' => 'users',
             ]),
             $headers,
             json_encode([
@@ -50,7 +50,7 @@ final class UsersClient implements ApiClientInterface
     ) : PromiseInterface {
         return $this->patchRequest(
             Uri::fromParts([
-                'path' => 'api/users/'.$id,
+                'path' => 'users/'.$id,
             ]),
             $headers,
             json_encode(array_filter([

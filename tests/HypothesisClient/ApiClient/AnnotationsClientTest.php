@@ -49,7 +49,7 @@ final class AnnotationsClientTest extends PHPUnit_Framework_TestCase
      */
     public function it_lists_annotations()
     {
-        $request = new Request('GET', 'api/search?user=list&group=__world__&offset=0&limit=20&order=desc',
+        $request = new Request('GET', 'search?user=list&group=__world__&offset=0&limit=20&order=desc',
             ['X-Foo' => 'bar', 'User-Agent' => 'HypothesisClient']);
         $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
         $this->httpClient
@@ -65,7 +65,7 @@ final class AnnotationsClientTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_credentials()
     {
-        $request = new Request('GET', 'api/search?user=list&group=__world__&offset=0&limit=20&order=desc',
+        $request = new Request('GET', 'search?user=list&group=__world__&offset=0&limit=20&order=desc',
             ['X-Foo' => 'bar', 'Authorization' => 'Basic '.base64_encode('client_id:secret_key'), 'User-Agent' => 'HypothesisClient']);
         $response = new FulfilledPromise(new ArrayResult(['foo' => ['bar', 'baz']]));
         $this->annotationsClient->setCredentials(new Credentials('client_id', 'secret_key', 'authority'));

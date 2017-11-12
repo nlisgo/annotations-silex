@@ -20,7 +20,7 @@ final class AnnotationsClient implements ApiClientInterface
     ) : PromiseInterface {
         return $this->getRequest(
             Uri::fromParts([
-                'path' => 'api/search',
+                'path' => 'search',
                 'query' => build_query([
                     'user' => $user,
                     'group' => $group,
