@@ -551,12 +551,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "2d4cccb88bc80120de317e1cbe50208fe02b5a4b"
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/2d4cccb88bc80120de317e1cbe50208fe02b5a4b",
-                "reference": "2d4cccb88bc80120de317e1cbe50208fe02b5a4b",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/5750a149fabf6487a53f09b1137afa97653edc9e",
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e",
                 "shasum": ""
             },
             "require": {
@@ -591,7 +591,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2017-11-09 11:49:12"
+            "time": "2017-11-13 09:52:12"
         },
         {
             "name": "elife/logging-sdk",
