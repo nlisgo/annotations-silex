@@ -8,7 +8,7 @@ return [
     'logging_level' => Logger::DEBUG,
     'api_url' => 'http://0.0.0.0:1234/',
     'hypothesis' => [
-        'api_url' => 'https://hypothes.is/',
+        'api_url' => 'https://hypothes.is/api',
         'client_id' => '',
         'secret_key' => '',
         'authority' => '',

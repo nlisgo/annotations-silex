@@ -3,7 +3,7 @@
 return [
     'api_url' => 'http://prod--gateway.elife.internal/',
     'hypothesis' => [
-        'api_url' => 'https://hypothes.is/',
+        'api_url' => 'https://hypothes.is/api',
         'client_id' => '',
         'secret_key' => '',
         'authority' => '',
