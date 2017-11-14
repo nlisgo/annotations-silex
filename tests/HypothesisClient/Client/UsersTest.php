@@ -6,11 +6,14 @@ use eLife\HypothesisClient\ApiClient\UsersClient;
 use eLife\HypothesisClient\Client\ClientInterface;
 use eLife\HypothesisClient\Client\Users;
 use eLife\HypothesisClient\Credentials\Credentials;
+use eLife\HypothesisClient\Exception\BadResponse;
 use eLife\HypothesisClient\HttpClient\HttpClientInterface;
 use eLife\HypothesisClient\Model\User;
 use eLife\HypothesisClient\Result\ArrayResult;
 use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use tests\eLife\HypothesisClient\RequestConstraint;
@@ -206,6 +209,53 @@ class UsersTest extends PHPUnit_Framework_TestCase
      */
     public function it_will_store_an_existing_user()
     {
-        $this->assertTrue(true);
+        $post_data = [
+            'authority' => 'authority',
+            'username' => 'username',
+            'email' => 'email@email.com',
+            'display_name' => 'Display Name',
+        ];
+        $post_request = new Request(
+            'POST',
+            'users',
+            ['Authorization' => $this->authorization, 'User-Agent' => 'HypothesisClient'],
+            json_encode($post_data)
+        );
+        $post_response_mess = json_encode(['status' => 'failure', 'reason' => 'user with username username already exists']);
+        $post_response = new Response(400, [], $post_response_mess);
+        $rejected_post_response = new RejectedPromise(new BadResponse($post_response_mess, $post_request, $post_response));
+        $patch_data = [
+            'email' => 'email@email.com',
+            'display_name' => 'Display Name',
+        ];
+        $patch_request = new Request(
+            'PATCH',
+            'users/username',
+            ['Authorization' => $this->authorization, 'User-Agent' => 'HypothesisClient'],
+            json_encode($patch_data)
+        );
+        $patch_response_data = $post_data + ['userid' => sprintf('%s@%s', $post_data['username'], $post_data['authority'])];
+        $patch_response = new FulfilledPromise(new ArrayResult($patch_response_data));
+        $user = new User('username', 'email@email.com', 'Display Name');
+        $this->usersClient
+            ->setCredentials($this->credentials);
+        $this->httpClient
+            ->expects($this->at(0))
+            ->method('send')
+            ->with(RequestConstraint::equalTo($post_request))
+            ->willReturn($rejected_post_response);
+        $this->denormalizer
+            ->method('denormalize')
+            ->with($patch_response->wait()->toArray(), User::class)
+            ->willReturn($user);
+        $expectedUser = clone $user;
+        $this->httpClient
+            ->expects($this->at(1))
+            ->method('send')
+            ->with(RequestConstraint::equalTo($patch_request))
+            ->willReturn($patch_response);
+        $storedUser = $this->users->store($user)->wait();
+        $this->assertFalse($storedUser->isNew());
+        $this->assertEquals($expectedUser, $storedUser);
     }
 }
