@@ -3,7 +3,7 @@
 namespace tests\eLife\Annotations;
 
 /**
- * @covers \eLife\Annotations\KernelTest
+ * @covers \eLife\Annotations\Kernel
  */
 final class KernelTest extends WebTestCase
 {
