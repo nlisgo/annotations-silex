@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/nlisgo/annotations-silex.svg?branch=master)](https://travis-ci.org/nlisgo/annotations-silex) [![Coverage Status](https://coveralls.io/repos/github/nlisgo/annotations-silex/badge.svg?branch=master)](https://coveralls.io/github/nlisgo/annotations-silex?branch=master)
