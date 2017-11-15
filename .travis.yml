@@ -38,9 +38,15 @@ install:
   - docker run -d --name goaws -p 4100:4100 pafortin/goaws
   - aws --endpoint-url http://localhost:4100 sqs create-queue --queue-name annotations--travis --region=$AWS_REGION
   - cp ./config/travis.php ./config/local.php
+  # Code coverage.
+  - cd $TRAVIS_BUILD_DIR
+  - mkdir -p $TRAVIS_BUILD_DIR/build/logs
 
 # Run script
 script:
   - ./vendor/bin/proofreader src/ web/
   - ./vendor/bin/proofreader --no-phpcpd tests/
   - ./vendor/bin/phpunit
+
+after_success:
+ - travis_retry $TRAVIS_BUILD_DIR/vendor/bin/coveralls -v
